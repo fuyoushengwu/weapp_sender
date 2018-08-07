@@ -1,12 +1,14 @@
 package cn.aijiamuyingfang.weapp.sender.recycleadapter;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
 
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
 import cn.aijiamuyingfang.commons.domain.address.RecieveAddress;
+import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
 import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderItem;
@@ -16,13 +18,15 @@ import cn.aijiamuyingfang.weapp.manager.commons.utils.ToastUtils;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.CommonAdapter;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.RecyclerViewHolder;
 import cn.aijiamuyingfang.weapp.sender.R;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by pc on 2018/5/7.
  */
 
 public class FinishedOwnSendAdapter extends CommonAdapter<ShopOrder> {
-
+    private static final String TAG = FinishedOwnSendAdapter.class.getName();
     private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
 
     public FinishedOwnSendAdapter(Context context, List<ShopOrder> data) {
@@ -52,9 +56,29 @@ public class FinishedOwnSendAdapter extends CommonAdapter<ShopOrder> {
                 ToastUtils.showSafeToast(mContext, "只有订单已完成100天以上，才能删除");
                 return;
             }
-            shopOrderControllerApi.delete100DaysFinishedShopOrder(CommonApp.getApplication().getUserToken(), itemData.getId()).subscribe(responseBean -> {
-                if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                    FinishedOwnSendAdapter.this.removeData(position);
+            shopOrderControllerApi.delete100DaysFinishedShopOrder(CommonApp.getApplication().getUserToken(), itemData.getId()).subscribe(new Observer<ResponseBean<Void>>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(ResponseBean<Void> responseBean) {
+                    if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
+                        FinishedOwnSendAdapter.this.removeData(position);
+                    } else {
+                        Log.e(TAG, responseBean.getMsg());
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e(TAG, "delete 100 days finished shoporder failed", e);
+                }
+
+                @Override
+                public void onComplete() {
+                    Log.i(TAG, "delete 100 days finished shoporder complete");
                 }
             });
         });
