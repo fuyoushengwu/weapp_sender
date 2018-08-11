@@ -18,13 +18,14 @@ import java.util.List;
 import butterknife.BindView;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
 import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
-import cn.aijiamuyingfang.commons.domain.address.RecieveAddress;
+import cn.aijiamuyingfang.commons.domain.address.StoreAddress;
 import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
 import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderStatus;
 import cn.aijiamuyingfang.commons.domain.shoporder.request.UpdateShopOrderStatusRequest;
 import cn.aijiamuyingfang.commons.domain.user.User;
+import cn.aijiamuyingfang.commons.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.commons.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
@@ -72,9 +73,8 @@ public class PickupDetailActivity extends BaseActivity {
     private ShopOrder mShopOrder;
 
     private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private List<Disposable> shoporderDisposableList = new ArrayList<>();
     private UserControllerApi userControllerApi = new UserControllerClient();
-    private List<Disposable> userDisposableList = new ArrayList<>();
+    private List<Disposable> disposableList = new ArrayList<>();
 
     @Override
     protected void init() {
@@ -105,7 +105,7 @@ public class PickupDetailActivity extends BaseActivity {
                         mShopOrder.getId(), updateBean).subscribe(new Observer<ResponseBean<Void>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        shoporderDisposableList.add(d);
+                        disposableList.add(d);
                     }
 
                     @Override
@@ -140,19 +140,21 @@ public class PickupDetailActivity extends BaseActivity {
         mTotalPriceTextView.setText(Html.fromHtml("合计 ￥<span style='color:#eb4f38'>" + mShopOrder.getTotalPrice() + "</span>", Html.FROM_HTML_MODE_LEGACY),
                 TextView.BufferType.SPANNABLE);
         mSendTypeTextView.setText(mShopOrder.getSendtype().name());
-        RecieveAddress recieveaddress = mShopOrder.getRecieveAddress();
-        mPickupAddressTextView.setText(recieveaddress.getPhone() + "\n" + recieveaddress.getProvince().getName()
-                + recieveaddress.getCity().getName()
-                + recieveaddress.getCounty().getName() + recieveaddress.getDetail());
-        mStoreContactNumberTextView.setText(recieveaddress.getPhone());
-        userControllerApi.getUser(CommonApp.getApplication().getUserToken(), mShopOrder.getUserid()).subscribe(new Observer<ResponseBean<User>>() {
+        StoreAddress storeAddress = mShopOrder.getPickupAddress();
+        if (storeAddress != null) {
+            mPickupAddressTextView.setText(storeAddress.getPhone() + "\n" + storeAddress.getProvince().getName()
+                    + storeAddress.getCity().getName()
+                    + storeAddress.getCounty().getName() + storeAddress.getDetail());
+            mStoreContactNumberTextView.setText(storeAddress.getPhone());
+        }
+        userControllerApi.getUserPhone(CommonApp.getApplication().getUserToken(), mShopOrder.getUserid()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
             @Override
             public void onSubscribe(Disposable d) {
-                userDisposableList.add(d);
+                disposableList.add(d);
             }
 
             @Override
-            public void onNext(ResponseBean<User> responseBean) {
+            public void onNext(ResponseBean<GetUserPhoneResponse> responseBean) {
                 if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
                     mUserPhoneNumberTextView.setText(responseBean.getData().getPhone());
                 } else {
@@ -192,7 +194,6 @@ public class PickupDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RxJavaUtils.dispose(shoporderDisposableList);
-        RxJavaUtils.dispose(userDisposableList);
+        RxJavaUtils.dispose(disposableList);
     }
 }

@@ -14,6 +14,7 @@ import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderItem;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
+import cn.aijiamuyingfang.weapp.manager.commons.utils.DateUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.utils.ToastUtils;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.CommonAdapter;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.RecyclerViewHolder;
@@ -50,8 +51,8 @@ public class FinishedThirdSendAdapter extends CommonAdapter<ShopOrder> {
         viewHolder.setText(R.id.address_detailAddress, "收件地址:" + recieveAddress.getProvince().getName() + recieveAddress.getCity().getName() + recieveAddress.getCounty().getName() + recieveAddress.getDetail());
         viewHolder.setText(R.id.thirdsend_company, "快递公司:" + itemData.getThirdsendCompany());
         viewHolder.setText(R.id.thirdsend_no, "快递单号:" + itemData.getThirdsendNo());
-        viewHolder.setText(R.id.order_createtime, "订单创建时间:" + itemData.getCreateTime());
-        viewHolder.setText(R.id.order_finishtime, "订单结束时间:" + itemData.getFinishTime());
+        viewHolder.setText(R.id.order_createtime, "订单创建时间:" + DateUtils.date2String(itemData.getCreateTime(), DateUtils.YMD_HMS_FORMAT));
+        viewHolder.setText(R.id.order_finishtime, "订单结束时间:" + DateUtils.date2String(itemData.getFinishTime(), DateUtils.YMD_HMS_FORMAT));
         viewHolder.setText(R.id.order_operator, "订单处理人:" + Arrays.toString(itemData.getOperator().toArray()));
         viewHolder.setOnClickListener(R.id.btn_delete, v -> {
             int finishedDays = itemData.getLastModifyTime();

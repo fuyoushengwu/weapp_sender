@@ -11,6 +11,7 @@ import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderItem;
 import cn.aijiamuyingfang.commons.domain.user.User;
+import cn.aijiamuyingfang.commons.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.CommonAdapter;
@@ -42,13 +43,13 @@ public class PreOrderOrderAdapter extends CommonAdapter<ShopOrder> {
         viewHolder.setText(R.id.total_price, "总价:" + itemData.getTotalPrice());
 
 
-        userControllerApi.getUser(CommonApp.getApplication().getUserToken(), itemData.getUserid()).subscribe(new Observer<ResponseBean<User>>() {
+        userControllerApi.getUserPhone(CommonApp.getApplication().getUserToken(), itemData.getUserid()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
             @Override
             public void onSubscribe(Disposable d) {
             }
 
             @Override
-            public void onNext(ResponseBean<User> responseBean) {
+            public void onNext(ResponseBean<GetUserPhoneResponse> responseBean) {
                 if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
                     viewHolder.setText(R.id.user_phoneNumber, "用户电话:" + responseBean.getData().getPhone());
                 } else {

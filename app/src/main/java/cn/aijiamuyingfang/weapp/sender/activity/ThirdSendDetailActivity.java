@@ -71,9 +71,9 @@ public class ThirdSendDetailActivity extends BaseActivity {
     @BindView(R.id.btn_save)
     Button mSaveButton;
 
-    private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private List<Disposable> shoporderDisposableList = new ArrayList<>();
     private ShopOrder mShopOrder;
+    private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
+    private List<Disposable> disposableList = new ArrayList<>();
 
     @Override
     protected void init() {
@@ -149,7 +149,7 @@ public class ThirdSendDetailActivity extends BaseActivity {
                 .subscribe(new Observer<ResponseBean<Void>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        shoporderDisposableList.add(d);
+                        disposableList.add(d);
                     }
 
                     @Override
@@ -184,6 +184,6 @@ public class ThirdSendDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RxJavaUtils.dispose(shoporderDisposableList);
+        RxJavaUtils.dispose(disposableList);
     }
 }
