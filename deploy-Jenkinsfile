@@ -11,7 +11,7 @@ pipeline {
         
         stage('get code') {
             steps {
-                git 'https://github.com/fuyoushengwu/weapp_sender.git'
+                git 'git@github.com:fuyoushengwu/weapp_sender.git'
             }
         }
 
