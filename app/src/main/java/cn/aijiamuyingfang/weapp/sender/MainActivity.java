@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if (System.currentTimeMillis() - exitTime > 2000) {
-                ToastUtils.showSafeToast(MainActivity.this, "再点一次退出轻松购");
+                ToastUtils.showSafeToast(MainActivity.this, "再点一次退出APP");
                 exitTime = System.currentTimeMillis();
             } else {
                 finish();

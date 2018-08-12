@@ -156,14 +156,15 @@ public class OwnSendDetailActivity extends BaseActivity {
                     OwnSendDetailActivity.this.finish();
                 } else {
                     mSaveButton.setClickable(true);
-                    ToastUtils.showSafeToast(OwnSendDetailActivity.this, "服务端异常,请稍后再试");
                     Log.e(TAG, responseBean.getMsg());
+                    ToastUtils.showSafeToast(OwnSendDetailActivity.this, "因服务端的原因,更新任务状态失败");
                 }
             }
 
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, "update shoporder status failed", e);
+                ToastUtils.showSafeToast(OwnSendDetailActivity.this, "因客户端的原因,更新任务状态失败");
             }
 
             @Override

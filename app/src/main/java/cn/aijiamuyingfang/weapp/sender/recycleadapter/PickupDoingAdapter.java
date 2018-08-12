@@ -11,7 +11,6 @@ import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
 import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderItem;
-import cn.aijiamuyingfang.commons.domain.user.User;
 import cn.aijiamuyingfang.commons.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
@@ -67,12 +66,12 @@ public class PickupDoingAdapter extends CommonAdapter<ShopOrder> {
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, "get user failed", e);
+                Log.e(TAG, "get user phone failed", e);
             }
 
             @Override
             public void onComplete() {
-                Log.i(TAG, "get user complete");
+                Log.i(TAG, "get user phone complete");
             }
         });
         viewHolder.setText(R.id.pichup_time, "取货时间:" + DateUtils.date2String(itemData.getPickupTime(), DateUtils.YMD_HMS_FORMAT));

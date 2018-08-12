@@ -159,13 +159,14 @@ public class ThirdSendDetailActivity extends BaseActivity {
                         } else {
                             Log.e(TAG, responseBean.getMsg());
                             mSaveButton.setClickable(true);
-                            ToastUtils.showSafeToast(ThirdSendDetailActivity.this, "服务端异常,请稍后再试");
+                            ToastUtils.showSafeToast(ThirdSendDetailActivity.this, "因服务端的原因,更新任务状态失败");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "update shoporder status failed", e);
+                        ToastUtils.showSafeToast(ThirdSendDetailActivity.this, "因客户端的原因,更新任务状态失败");
                     }
 
                     @Override

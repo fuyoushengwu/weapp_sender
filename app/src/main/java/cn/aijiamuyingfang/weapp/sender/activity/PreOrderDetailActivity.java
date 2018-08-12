@@ -91,7 +91,7 @@ public class PreOrderDetailActivity extends BaseActivity {
                         PreOrderDetailActivity.this.finish();
                     } else {
                         Log.e(TAG, responseBean.getMsg());
-                        ToastUtils.showSafeToast(PreOrderDetailActivity.this, "服务端异常,请稍后再试");
+                        ToastUtils.showSafeToast(PreOrderDetailActivity.this, "因服务端的原因,更新商品数量失败");
                     }
                     mSaveButton.setClickable(true);
                 }
@@ -99,6 +99,7 @@ public class PreOrderDetailActivity extends BaseActivity {
                 @Override
                 public void onError(Throwable e) {
                     Log.e(TAG, "update good failed", e);
+                    ToastUtils.showSafeToast(PreOrderDetailActivity.this, "因客户端的原因,更新商品数量失败");
                 }
 
                 @Override

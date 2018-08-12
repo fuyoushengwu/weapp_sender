@@ -115,13 +115,14 @@ public class PickupDetailActivity extends BaseActivity {
                         } else {
                             Log.e(TAG, responseBean.getMsg());
                             button.setClickable(true);
-                            ToastUtils.showSafeToast(PickupDetailActivity.this, "服务端异常,请稍后再试");
+                            ToastUtils.showSafeToast(PickupDetailActivity.this, "因服务端的原因,更新任务状态失败");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "update shoporder status failed", e);
+                        ToastUtils.showSafeToast(PickupDetailActivity.this, "因客户端的原因,更新任务状态失败");
                     }
 
                     @Override
@@ -159,17 +160,19 @@ public class PickupDetailActivity extends BaseActivity {
                     mUserPhoneNumberTextView.setText(responseBean.getData().getPhone());
                 } else {
                     Log.e(TAG, responseBean.getMsg());
+                    ToastUtils.showSafeToast(PickupDetailActivity.this, "因服务端的原因,无法获取客户的电话号码");
                 }
             }
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, "get user failed", e);
+                Log.e(TAG, "get user phone failed", e);
+                ToastUtils.showSafeToast(PickupDetailActivity.this, "因客户端的原因,无法获取客户的电话号码");
             }
 
             @Override
             public void onComplete() {
-                Log.i(TAG, "get user complete");
+                Log.i(TAG, "get user phone complete");
             }
         });
         mPickupTimeTextView.setText(DateUtils.date2String(mShopOrder.getPickupTime(), DateUtils.YMD_HMS_FORMAT));

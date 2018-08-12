@@ -31,6 +31,7 @@ import cn.aijiamuyingfang.weapp.manager.access.server.impl.AuthControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.activity.BaseActivity;
+import cn.aijiamuyingfang.weapp.manager.commons.utils.ToastUtils;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -121,6 +122,7 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onError(Throwable e) {
                     Log.e(TAG, "user login failed", e);
+                    ToastUtils.showSafeToast(LoginActivity.this, "因客户端的原因,用户登录失败");
                 }
 
                 @Override

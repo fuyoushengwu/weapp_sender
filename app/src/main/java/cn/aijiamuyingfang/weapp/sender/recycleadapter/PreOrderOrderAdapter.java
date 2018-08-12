@@ -10,7 +10,6 @@ import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
 import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderItem;
-import cn.aijiamuyingfang.commons.domain.user.User;
 import cn.aijiamuyingfang.commons.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
@@ -46,6 +45,7 @@ public class PreOrderOrderAdapter extends CommonAdapter<ShopOrder> {
         userControllerApi.getUserPhone(CommonApp.getApplication().getUserToken(), itemData.getUserid()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
             @Override
             public void onSubscribe(Disposable d) {
+                // NOT NEED IMPLEMENT
             }
 
             @Override
@@ -59,12 +59,12 @@ public class PreOrderOrderAdapter extends CommonAdapter<ShopOrder> {
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, "get user failed", e);
+                Log.e(TAG, "get user phone failed", e);
             }
 
             @Override
             public void onComplete() {
-                Log.i(TAG, "get user complete");
+                Log.i(TAG, "get user phone complete");
             }
         });
         viewHolder.setText(R.id.order_days, "订单未处理天数:" + itemData.getLastModifyTime());

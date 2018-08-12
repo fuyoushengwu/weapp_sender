@@ -72,12 +72,14 @@ public class FinishedThirdSendAdapter extends CommonAdapter<ShopOrder> {
                         FinishedThirdSendAdapter.this.removeData(position);
                     } else {
                         Log.e(TAG, responseBean.getMsg());
+                        ToastUtils.showSafeToast(mContext, "因服务端的原因,删除订单任务失败");
                     }
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     Log.e(TAG, "delete 100 days finished shoporder failed", e);
+                    ToastUtils.showSafeToast(mContext, "因客户端的原因,删除订单任务失败");
                 }
 
                 @Override

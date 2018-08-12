@@ -13,7 +13,6 @@ import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
 import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderItem;
-import cn.aijiamuyingfang.commons.domain.user.User;
 import cn.aijiamuyingfang.commons.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
@@ -71,12 +70,12 @@ public class FinishedPickupAdapter extends CommonAdapter<ShopOrder> {
 
             @Override
             public void onError(Throwable e) {
-                Log.e(TAG, "get user failed", e);
+                Log.e(TAG, "get user phone failed", e);
             }
 
             @Override
             public void onComplete() {
-                Log.i(TAG, "get user complete");
+                Log.i(TAG, "get user phone complete");
             }
         });
         viewHolder.setText(R.id.pichup_time, "取货时间:" + DateUtils.date2String(itemData.getPickupTime(), DateUtils.YMD_HMS_FORMAT));
@@ -101,12 +100,14 @@ public class FinishedPickupAdapter extends CommonAdapter<ShopOrder> {
                         FinishedPickupAdapter.this.removeData(position);
                     } else {
                         Log.e(TAG, responseBean.getMsg());
+                        ToastUtils.showSafeToast(mContext, "因服务端的原因,删除订单任务失败");
                     }
                 }
 
                 @Override
                 public void onError(Throwable e) {
                     Log.e(TAG, "delete 100 days finished shoporder failed", e);
+                    ToastUtils.showSafeToast(mContext, "因客户端的原因,删除订单任务失败");
                 }
 
                 @Override
