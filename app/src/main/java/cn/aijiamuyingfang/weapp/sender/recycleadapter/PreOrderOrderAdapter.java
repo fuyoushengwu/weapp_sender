@@ -3,14 +3,15 @@ package cn.aijiamuyingfang.weapp.sender.recycleadapter;
 import android.content.Context;
 import android.util.Log;
 
+
 import java.util.List;
 
+import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderItem;
+import cn.aijiamuyingfang.client.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
-import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
-import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderItem;
-import cn.aijiamuyingfang.commons.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.CommonAdapter;
@@ -25,24 +26,23 @@ import io.reactivex.disposables.Disposable;
 
 public class PreOrderOrderAdapter extends CommonAdapter<ShopOrder> {
     private static final String TAG = PreOrderOrderAdapter.class.getName();
+    private static final UserControllerApi userControllerApi = new UserControllerClient();
 
     public PreOrderOrderAdapter(Context context, List<ShopOrder> data) {
         super(context, data, R.layout.adapter_item_preorder_order);
     }
 
-    private UserControllerApi userControllerApi = new UserControllerClient();
-
     @Override
     protected void convert(final RecyclerViewHolder viewHolder, ShopOrder itemData, int position) {
         StringBuilder sb = new StringBuilder();
         for (ShopOrderItem orderGood : itemData.getOrderItemList()) {
-            sb.append(orderGood.getGood().getName()).append("*").append(orderGood.getCount()).append("\n");
+            sb.append(orderGood.getGoodName()).append("*").append(orderGood.getCount()).append("\n");
         }
         viewHolder.setText(R.id.goods, sb.toString());
         viewHolder.setText(R.id.total_price, "总价:" + itemData.getTotalPrice());
 
 
-        userControllerApi.getUserPhone(CommonApp.getApplication().getUserToken(), itemData.getUserid()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
+        userControllerApi.getUserPhone(itemData.getUsername(), CommonApp.getApplication().getUserToken()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
             @Override
             public void onSubscribe(Disposable d) {
                 // NOT NEED IMPLEMENT

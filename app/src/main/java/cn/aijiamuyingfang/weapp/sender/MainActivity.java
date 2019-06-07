@@ -32,7 +32,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity.instance = this;
     }
 
     @Override
@@ -51,13 +50,13 @@ public class MainActivity extends BaseActivity {
      */
     private void initTab() {
         List<Tab> mTabs = new ArrayList<>();
-        mTabs.add(new Tab(R.string.tab_thirdsend_itle, R.drawable.selector_icon_thirdsend, ThirdSendFragment.class));
-        mTabs.add(new Tab(R.string.tab_ownsend_title, R.drawable.selector_icon_ownsend, OwnSendFragment.class));
-        mTabs.add(new Tab(R.string.tab_pickup_title, R.drawable.selector_icon_pickup, PickupFragment.class));
-        mTabs.add(new Tab(R.string.tab_preorder_title, R.drawable.selector_icon_preorder, PreOrderFragment.class));
-        mTabs.add(new Tab(R.string.tab_finished_title, R.drawable.selector_icon_finished, FinishedFragment.class));
+        mTabs.add(new Tab(R.string.Tab_ThirdSend_Title, R.drawable.selector_icon_thirdsend, ThirdSendFragment.class));
+        mTabs.add(new Tab(R.string.Tab_OwnSend_Title, R.drawable.selector_icon_ownsend, OwnSendFragment.class));
+        mTabs.add(new Tab(R.string.Tab_PickUP_Title, R.drawable.selector_icon_pickup, PickupFragment.class));
+        mTabs.add(new Tab(R.string.Tab_PreOrder_Title, R.drawable.selector_icon_preorder, PreOrderFragment.class));
+        mTabs.add(new Tab(R.string.Tab_Finished_Title, R.drawable.selector_icon_finished, FinishedFragment.class));
 
-        mTabHost.setup(this, this.getSupportFragmentManager(), R.id.realtabcontent);
+        mTabHost.setup(this, this.getSupportFragmentManager(), R.id.real_tab_content);
         for (Tab tab : mTabs) {
             TabHost.TabSpec tabSpec = mTabHost.newTabSpec(getString(tab.getTitle()));
             tabSpec.setIndicator(buildIndicator(tab));
@@ -94,11 +93,5 @@ public class MainActivity extends BaseActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    private static MainActivity instance;
-
-    public static MainActivity getActivity() {
-        return instance;
     }
 }

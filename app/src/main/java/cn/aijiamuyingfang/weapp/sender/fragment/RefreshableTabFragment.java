@@ -5,7 +5,7 @@ import android.support.design.widget.TabLayout;
 
 import java.util.List;
 
-import cn.aijiamuyingfang.commons.domain.PageResponse;
+import cn.aijiamuyingfang.client.domain.PageResponse;
 import cn.aijiamuyingfang.weapp.manager.widgets.WeToolBar;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.RefreshableBaseFragment;
 import cn.aijiamuyingfang.weapp.sender.R;

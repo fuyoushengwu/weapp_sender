@@ -12,12 +12,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.domain.goods.Good;
+import cn.aijiamuyingfang.client.domain.previeworder.PreOrderGood;
 import cn.aijiamuyingfang.client.rest.api.GoodControllerApi;
-import cn.aijiamuyingfang.commons.domain.goods.Good;
-import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
-import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
-import cn.aijiamuyingfang.commons.domain.shoporder.PreOrderGood;
-import cn.aijiamuyingfang.commons.utils.StringUtils;
+import cn.aijiamuyingfang.client.rest.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.GoodControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
@@ -32,7 +32,9 @@ import io.reactivex.disposables.Disposable;
 
 public class PreOrderDetailActivity extends BaseActivity {
     private static final String TAG = PreOrderDetailActivity.class.getName();
-    @BindView(R.id.good_coverimg)
+    private static final GoodControllerApi goodControllerApi = new GoodControllerClient();
+
+    @BindView(R.id.good_cover_img)
     ImageView mGoodCoverImageView;
     @BindView(R.id.good_name)
     TextView mGoodNameTextView;
@@ -46,9 +48,7 @@ public class PreOrderDetailActivity extends BaseActivity {
     ClearEditText mGoodCountView;
     @BindView(R.id.btn_save)
     Button mSaveButton;
-    private GoodControllerApi goodControllerApi = new GoodControllerClient();
-    private List<Disposable> goodDisposableList = new ArrayList<>();
-    private PreOrderGood mPreOrderGood;
+    private final List<Disposable> goodDisposableList = new ArrayList<>();
 
     @Override
     protected void init() {
@@ -57,19 +57,31 @@ public class PreOrderDetailActivity extends BaseActivity {
 
     private void initData() {
         Intent intent = getIntent();
-        mPreOrderGood = intent.getParcelableExtra(Constant.INTENT_SHOPORDER);
-        GlideUtils.load(this, mPreOrderGood.getGood().getCoverImg(), mGoodCoverImageView);
-        mGoodNameTextView.setText(mPreOrderGood.getGood().getName());
-        mGoodPriceTextView.setText("￥" + mPreOrderGood.getGood().getPrice());
-        mGoodUnitTextView.setText("规格:" + mPreOrderGood.getGood().getPack());
-        mGoodLevelTextView.setText("阶段:" + mPreOrderGood.getGood().getLevel());
-        mGoodCountView.setText(mPreOrderGood.getGood().getCount() + "");
+        PreOrderGood mPreOrderGood = intent.getParcelableExtra(Constant.INTENT_SHOPORDER);
+        goodControllerApi.getGood(mPreOrderGood.getGoodId()).subscribe(responseBean -> {
+            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
+                Good good = responseBean.getData();
+                GlideUtils.load(this, good.getCoverImg().getUrl(), mGoodCoverImageView);
+                mGoodNameTextView.setText(good.getName());
+                mGoodPriceTextView.setText(getString(R.string.Price, good.getPrice()));
+                mGoodUnitTextView.setText(getString(R.string.Good_Pack, good.getPack()));
+                mGoodLevelTextView.setText(getString(R.string.Good_Level, good.getLevel()));
+                mGoodCountView.setText(getString(R.string.Good_Count, good.getCount()));
+            } else {
+                Log.e(TAG, responseBean.getMsg());
+                ToastUtils.showSafeToast(PreOrderDetailActivity.this, "因服务端的原因,导致获取预订单商品信息失败");
+            }
+        }, throwable -> {
+            Log.e(TAG, "get pre order good info failed", throwable);
+            ToastUtils.showSafeToast(PreOrderDetailActivity.this, "因服务端的原因,导致获取预订单商品信息失败");
+        });
+
     }
 
     @OnClick(R.id.btn_save)
     public void onClick(View view) {
         mSaveButton.setClickable(false);
-        String goodCountStr = mGoodCountView.getText().toString();
+        String goodCountStr = mGoodCountView.getText() != null ? mGoodCountView.getText().toString() : "";
         if (StringUtils.isEmpty(goodCountStr)) {
             mSaveButton.setClickable(true);
             ToastUtils.showSafeToast(PreOrderDetailActivity.this, "请输入商品数量");
@@ -77,9 +89,9 @@ public class PreOrderDetailActivity extends BaseActivity {
         }
         try {
             int goodCount = Integer.parseInt(goodCountStr);
-            Good good = mPreOrderGood.getGood();
+            Good good = new Good();
             good.setCount(goodCount);
-            goodControllerApi.updateGood(CommonApp.getApplication().getUserToken(), good.getId(), good).subscribe(new Observer<ResponseBean<Good>>() {
+            goodControllerApi.updateGood(good.getId(), good, CommonApp.getApplication().getUserToken()).subscribe(new Observer<ResponseBean<Good>>() {
                 @Override
                 public void onSubscribe(Disposable d) {
                     goodDisposableList.add(d);

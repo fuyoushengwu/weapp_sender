@@ -21,42 +21,49 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.aijiamuyingfang.client.rest.api.AuthControllerApi;
-import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
-import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
-import cn.aijiamuyingfang.commons.domain.user.Gender;
-import cn.aijiamuyingfang.commons.domain.user.response.TokenResponse;
-import cn.aijiamuyingfang.commons.utils.StringUtils;
-import cn.aijiamuyingfang.weapp.manager.access.server.impl.AuthControllerClient;
+import cn.aijiamuyingfang.client.oauth2.OAuthResponse;
+import cn.aijiamuyingfang.client.rest.utils.StringUtils;
+import cn.aijiamuyingfang.weapp.manager.access.server.utils.OAuth2Utils;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.activity.BaseActivity;
 import cn.aijiamuyingfang.weapp.manager.commons.utils.ToastUtils;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class LoginActivity extends BaseActivity {
     private static final String TAG = LoginActivity.class.getName();
+    private final List<Disposable> authDisposableList = new ArrayList<>();
     @BindView(R.id.login_progress)
     ProgressBar mProgressView;
     @BindView(R.id.login_form)
     ScrollView mLoginFormView;
-    @BindView(R.id.et_account)
-    EditText mAcountEditView;
-    @BindView(R.id.iv_account)
-    ImageView mAccountImageView;
+
+    @BindView(R.id.et_username)
+    EditText mUserNameEditView;
+    @BindView(R.id.iv_username)
+    ImageView mUserNameImageView;
+
+    @BindView(R.id.et_password)
+    EditText mPasswordEditView;
+    @BindView(R.id.iv_password)
+    ImageView mPasswordImageView;
 
     @Override
     protected void init() {
-        mAcountEditView.setOnEditorActionListener((textView, id, keyEvent) -> {
+        mPasswordEditView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
                 attemptLogin();
                 return true;
             }
             return false;
         });
-        mAcountEditView.addTextChangedListener(new TextWatcher() {
+        mUserNameEditView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //NOT NEED IMPLEMENT
@@ -71,77 +78,105 @@ public class LoginActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 //如果有输入内容长度大于0那么显示clear按钮
                 if (s.length() > 0) {
-                    mAccountImageView.setVisibility(View.VISIBLE);
+                    mUserNameImageView.setVisibility(View.VISIBLE);
                 } else {
-                    mAccountImageView.setVisibility(View.INVISIBLE);
+                    mUserNameImageView.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        mPasswordEditView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //NOT NEED IMPLEMENT
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //NOT NEED IMPLEMENT
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //如果有输入内容长度大于0那么显示clear按钮
+                if (s.length() > 0) {
+                    mPasswordImageView.setVisibility(View.VISIBLE);
+                } else {
+                    mPasswordImageView.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
-    private AuthControllerApi authControllerApi = new AuthControllerClient();
-    private List<Disposable> authDisposableList = new ArrayList<>();
-
     private void attemptLogin() {
-        mAcountEditView.setError(null);
-        String account = mAcountEditView.getText().toString();
+        mUserNameEditView.setError(null);
+        mPasswordEditView.setError(null);
 
-        if (TextUtils.isEmpty(account)) {
-            mAcountEditView.setError("账号不能为空");
-            mAcountEditView.requestFocus();
-        } else {
-            showProgress(true);
-            authControllerApi.getToken(account, null, null, Gender.MALE).subscribe(new Observer<ResponseBean<TokenResponse>>() {
-                @Override
-                public void onSubscribe(Disposable d) {
-                    authDisposableList.add(d);
-                }
-
-                @Override
-                public void onNext(ResponseBean<TokenResponse> responseBean) {
-                    showProgress(false);
-                    if (!ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                        Log.e(TAG, responseBean.getMsg());
-                        mAcountEditView.setError("账号不存在");
-                        mAcountEditView.requestFocus();
-                        return;
-                    }
-                    TokenResponse tokenResponse = responseBean.getData();
-                    if (null == tokenResponse || StringUtils.isEmpty(tokenResponse.getToken())) {
-                        mAcountEditView.setError("账号不存在");
-                        mAcountEditView.requestFocus();
-                        return;
-                    }
-                    CommonApp.getApplication().setUserToken(tokenResponse.getToken());
-                    CommonApp.getApplication().setUserId(tokenResponse.getUserid());
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.e(TAG, "user login failed", e);
-                    ToastUtils.showSafeToast(LoginActivity.this, "因客户端的原因,用户登录失败");
-                }
-
-                @Override
-                public void onComplete() {
-                    Log.d(TAG, "user login success");
-                }
-            });
-
+        String username = mUserNameEditView.getText().toString();
+        if (TextUtils.isEmpty(username)) {
+            mUserNameEditView.setError("账号不能为空");
+            mUserNameEditView.requestFocus();
+            return;
         }
+
+        String password = mPasswordEditView.getText().toString();
+        if (TextUtils.isEmpty(password)) {
+            mPasswordEditView.setError("密码不能为空");
+            mPasswordEditView.requestFocus();
+            return;
+        }
+
+        showProgress(true);
+        Observable.create((ObservableOnSubscribe<OAuthResponse>) e -> {
+            OAuthResponse oAuthResponse = OAuth2Utils.getAccessToken(username, password);
+            e.onNext(oAuthResponse);
+            e.onComplete();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<OAuthResponse>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                authDisposableList.add(d);
+            }
+
+            @Override
+            public void onNext(OAuthResponse oAuthResponse) {
+                showProgress(false);
+                if (null == oAuthResponse || StringUtils.isEmpty(oAuthResponse.getAccessToken())) {
+                    mPasswordEditView.setError("用户名密码不正确");
+                    mPasswordEditView.requestFocus();
+                    return;
+                }
+                CommonApp.getApplication().setUserToken(oAuthResponse.getAccessToken());
+                CommonApp.getApplication().setUsername(username);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                showProgress(false);
+                Log.e(TAG, "user login failed", e);
+                mPasswordEditView.setError("用户名密码不正确");
+                mPasswordEditView.requestFocus();
+            }
+
+            @Override
+            public void onComplete() {
+                Log.i(TAG, "user login complete");
+            }
+        });
     }
 
-    @OnClick({R.id.btn_login, R.id.iv_account})
+    @OnClick({R.id.btn_login, R.id.iv_username, R.id.iv_password})
     public void onclick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
                 attemptLogin();
                 break;
-            case R.id.iv_account:
-                mAcountEditView.setText("");
+            case R.id.iv_username:
+                mUserNameEditView.setText("");
+                break;
+            case R.id.iv_password:
+                mPasswordEditView.setText("");
                 break;
             default:
                 break;

@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clipToPadding="true"
         android:fitsSystemWindows="true"
         android:focusable="true"
@@ -31,9 +31,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_weight="1"
-                android:text="操作员"
+                android:text="@string/Activity_ThirdSend_Detail_Operator"
                 android:textSize="20sp" />
 
             <cn.aijiamuyingfang.weapp.manager.widgets.ClearEditText
@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="2"
-                android:hint="请输入操作员姓名"
+                android:hint="@string/Activity_ThirdSend_Detail_Operator_Tip"
                 android:textSize="20sp" />
         </LinearLayout>
 
@@ -61,9 +61,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_weight="1"
-                android:text="运费"
+                android:text="@string/Activity_ThirdSend_Detail_Send_Price"
                 android:textSize="20sp" />
 
             <TextView
@@ -82,7 +82,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_weight="1"
                 android:textSize="20sp" />
 
@@ -108,9 +108,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="配送方式"
+                    android:text="@string/Activity_ThirdSend_Detail_Send_Type"
                     android:textSize="20sp" />
 
                 <TextView
@@ -129,9 +129,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="收货地址"
+                    android:text="@string/Activity_ThirdSend_Detail_Recieve_Address"
                     android:textSize="20sp" />
 
                 <TextView
@@ -150,9 +150,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="订单号"
+                    android:text="@string/Activity_ThirdSend_Detail_Order_No"
                     android:textSize="20sp" />
 
                 <TextView
@@ -171,13 +171,13 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="创建时间"
+                    android:text="@string/Activity_ThirdSend_Detail_Order_CreateTime"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/shoporder_createtime"
+                    android:id="@+id/shoporder_create_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
@@ -192,18 +192,18 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="快递公司"
+                    android:text="@string/Activity_ThirdSend_Detail_Send_Company"
                     android:textSize="20sp" />
 
                 <cn.aijiamuyingfang.weapp.manager.widgets.ClearEditText
-                    android:id="@+id/thirdsend_company"
+                    android:id="@+id/third_send_company"
                     style="@style/editText_base"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="2"
-                    android:hint="请填写快递公司"
+                    android:hint="@string/Activity_ThirdSend_Detail_Send_Company_Tip"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -215,18 +215,18 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="快递单号"
+                    android:text="@string/Activity_ThirdSend_Detail_Send_No"
                     android:textSize="20sp" />
 
                 <cn.aijiamuyingfang.weapp.manager.widgets.ClearEditText
-                    android:id="@+id/thirdsend_no"
+                    android:id="@+id/third_send_no"
                     style="@style/editText_base"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:layout_weight="2"
-                    android:hint="请输入快递单号"
+                    android:hint="@string/Activity_ThirdSend_Detail_Send_No_Tip"
                     android:textSize="20sp" />
             </LinearLayout>
         </LinearLayout>
@@ -239,7 +239,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:layout_marginTop="30dp"
-            android:text="保存" />
+            android:text="@string/Activity_ThirdSend_Detail_Button_Save" />
 
     </LinearLayout>
 

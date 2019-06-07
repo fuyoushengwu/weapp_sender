@@ -1,38 +1,91 @@
 <resources>
     <string name="app_name">爱家母婴客户端</string>
+    <string name="Price">￥%1$.4f</string>
+    <string name="TotalPrice">合计 ￥<span style='color:#eb4f38'>￥%1$.4f</span></string>
+    <string name="Good_Pack">规格:%s</string>
+    <string name="Good_Level">阶段:%s</string>
+    <string name="Good_Count">商品数:%d</string>
 
-    <string name="tab_thirdsend_itle">快递</string>
-    <string name="tab_ownsend_title">送货</string>
-    <string name="tab_pickup_title">自取</string>
-    <string name="tab_preorder_title">预约</string>
-    <string name="tab_finished_title">已完成</string>
+    <string name="Tab_ThirdSend_Title">快递</string>
+    <string name="Tab_OwnSend_Title">送货</string>
+    <string name="Tab_PickUP_Title">自取</string>
+    <string name="Tab_PreOrder_Title">预约</string>
+    <string name="Tab_Finished_Title">已完成</string>
 
-    <string name="tab_thirdsend_layout_unstart_title">未开始</string>
-    <!--<string name="tab_thirdsend_layout_unstart_tag">未开始</string>-->
-    <string name="tab_thirdsend_layout_doing_title">进行中</string>
-    <!--<string name="tab_thirdsend_layout_doing_tag">进行中</string>-->
+    <string name="Tab_ThirdSend_Layout_UNStart_Title">未开始</string>
+    <string name="Tab_ThirdSend_Layout_Doing_Title">进行中</string>
 
-    <string name="tab_ownsend_layout_unstart_title">未开始</string>
-    <!--<string name="tab_ownsend_layout_unstart_tag">未开始</string>-->
-    <string name="tab_ownsend_layout_doing_title">进行中</string>
-    <!--<string name="tab_ownsend_layout_doing_tag">进行中</string>-->
+    <string name="Tab_OwnSend_Layout_UNStart_Title">未开始</string>
+    <string name="Tab_OwnSend_Layout_Doing_Title">进行中</string>
 
-    <string name="tab_pickup_layout_unstart_title">未开始</string>
-    <!--<string name="tab_pickup_layout_unstart_tag">未开始</string>-->
-    <string name="tab_pickup_layout_doing_title">进行中</string>
-    <!--<string name="tab_pickup_layout_doing_tag">进行中</string>-->
+    <string name="Tab_PickUP_Layout_UNStart_Title">未开始</string>
+    <string name="Tab_PickUP_Layout_Doing_Title">进行中</string>
 
-    <string name="tab_preorder_layout_order_title">订单</string>
-    <!--<string name="tab_preorder_layout_order_tag">订单</string>-->
-    <string name="tab_preorder_layout_good_title">商品</string>
-    <!--<string name="tab_preorder_layout_good_tag">商品</string>-->
+    <string name="Tab_PreOrder_Layout_Order_Title">订单</string>
+    <string name="Tab_PreOrder_Layout_Good_Title">商品</string>
 
-    <string name="tab_finished_layout_thirdsend_title">快递</string>
-    <!--<string name="tab_finished_layout_thirdsend_tag">快递</string>-->
-    <string name="tab_finished_layout_ownsend_title">送货</string>
-    <!--<string name="tab_finished_layout_ownsend_tag">送货</string>-->
-    <string name="tab_finished_layout_pickup_title">自取</string>
-    <!--<string name="tab_finished_layout_pickup_tag">自取</string>-->
-    <string name="tab_finished_layout_preorder_title">预约</string>
-    <!--<string name="tab_finished_layout_preorder_tag">预约</string>-->
+    <string name="Tab_Finished_Layout_ThirdSend_Title">快递</string>
+    <string name="Tab_Finished_Layout_OwnSend_Title">送货</string>
+    <string name="Tab_Finished_Layout_PickUP_Title">自取</string>
+    <string name="Tab_Finished_Layout_PreOrder_Title">预约</string>
+
+    <string name="Activity_Login_Title">登录界面</string>
+    <string name="Activity_Login_UserName">请输入登录账户</string>
+    <string name="Activity_Login_Password">请输入登录密码</string>
+    <string name="Activity_Login_Button">登录</string>
+
+    <string name="Activity_ThirdSend_Detail_Operator">操作员</string>
+    <string name="Activity_ThirdSend_Detail_Operator_Tip">请输入操作员姓名</string>
+    <string name="Activity_ThirdSend_Detail_Send_Price">运费</string>
+    <string name="Activity_ThirdSend_Detail_Send_Type">配送方式</string>
+    <string name="Activity_ThirdSend_Detail_Recieve_Address">收货地址</string>
+    <string name="Activity_ThirdSend_Detail_Order_No">订单号</string>
+    <string name="Activity_ThirdSend_Detail_Order_CreateTime">创建时间</string>
+    <string name="Activity_ThirdSend_Detail_Send_Company">快递公司</string>
+    <string name="Activity_ThirdSend_Detail_Send_Company_Tip">请填写快递公司</string>
+    <string name="Activity_ThirdSend_Detail_Send_No">快递单号</string>
+    <string name="Activity_ThirdSend_Detail_Send_No_Tip">请输入快递单号</string>
+    <string name="Activity_ThirdSend_Detail_Button_Save">保存</string>
+
+    <string name="Activity_PickUP_Detail_Operator">操作员</string>
+    <string name="Activity_PickUP_Detail_Operator_Tip">请输入操作员姓名</string>
+    <string name="Activity_PickUP_Detail_Price">总价</string>
+    <string name="Activity_PickUP_Detail_Send_Type">配送方式</string>
+    <string name="Activity_PickUP_Detail_PickUP_Address">取货地址</string>
+    <string name="Activity_PickUP_Detail_Store_Phone">门店电话</string>
+    <string name="Activity_PickUP_Detail_Recieve_Phone">用户电话</string>
+    <string name="Activity_PickUP_Detail_PickUP_Time">取货时间</string>
+    <string name="Activity_PickUP_Detail_Order_No">订单号</string>
+    <string name="Activity_PickUP_Detail_Order_CreateTime">创建时间</string>
+
+    <string name="Activity_OwnSend_Detail_Title">订单详情</string>
+    <string name="Activity_OwnSend_Detail_Operator">操作员</string>
+    <string name="Activity_OwnSend_Detail_Operator_Tip">请输入操作员姓名</string>
+    <string name="Activity_OwnSend_Detail_Send_Price">运费</string>
+    <string name="Activity_OwnSend_Detail_Send_Type">配送方式</string>
+    <string name="Activity_OwnSend_Detail_Recieve_Address">收货地址</string>
+    <string name="Activity_OwnSend_Detail_Order_No">订单号</string>
+    <string name="Activity_OwnSend_Detail_Order_CreateTime">创建时间</string>
+    <string name="Activity_OwnSend_Detail_Sender">送货员</string>
+    <string name="Activity_OwnSend_Detail_Sender_Tip">请输入送货员姓名</string>
+    <string name="Activity_OwnSend_Detail_Sender_Phone">送货员电话</string>
+    <string name="Activity_OwnSend_Detail_Sender_Phone_Tip">请输入送货员电话</string>
+    <string name="Activity_OwnSend_Detail_Button_Save">保存</string>
+
+    <string name="Activity_PreOrder_Detail_Price">价格</string>
+    <string name="Activity_PreOrder_Detail_Good_Count">商品总量</string>
+    <string name="Activity_PreOrder_Detail_Good_Count_Tip">请输入商品总量</string>
+    <string name="Activity_PreOrder_Detail_Good_Save_Button">保存</string>
+
+    <string name="Adapter_Item_Finished_OwnSend_Delete_Button">删除100天前订单</string>
+
+    <string name="Adapter_Item_Finished_PickUP_Delete_Button">删除100天前订单</string>
+
+    <string name="Adapter_Item_Finished_ThirdSend_Delete_Button">删除100天前订单</string>
+
+    <string name="Adapter_Item_PreOrder_Good_Good_Name">商品名</string>
+    <string name="Adapter_Item_PreOrder_Good_Good_Count">商品数量</string>
+
+    <string name="Default_Content_Description">Default_Content_Description</string>
+    <string name="Tool_Bar_Search_Tip">请输入搜索内容</string>
 </resources>

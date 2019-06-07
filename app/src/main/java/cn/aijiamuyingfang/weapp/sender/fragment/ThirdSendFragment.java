@@ -12,12 +12,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.domain.shoporder.SendType;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
+import cn.aijiamuyingfang.client.domain.shoporder.response.GetShopOrderListResponse;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
-import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
-import cn.aijiamuyingfang.commons.domain.shoporder.SendType;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.commons.domain.shoporder.response.GetShopOrderListResponse;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.Constant;
@@ -34,17 +34,17 @@ import io.reactivex.Observable;
  */
 
 public final class ThirdSendFragment extends RefreshableTabFragment<ShopOrder, GetShopOrderListResponse> {
-    private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private List<Integer> mTabTitleList = Arrays.asList(R.string.tab_thirdsend_layout_unstart_title, R.string.tab_thirdsend_layout_doing_title);
-    private List<CommonAdapter<ShopOrder>> mAdapterList = Arrays.asList(
+    private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
+    private static final List<Integer> mTabTitleList = Arrays.asList(R.string.Tab_ThirdSend_Layout_UNStart_Title, R.string.Tab_ThirdSend_Layout_Doing_Title);
+    private final List<CommonAdapter<ShopOrder>> mAdapterList = Arrays.asList(
             new ThirdSendUnStartAdapter(CommonApp.getApplication(), new ArrayList<>()),
             new ThirdSendDoingAdapter(CommonApp.getApplication(), new ArrayList<>())
     );
-    private int[] mTotalpageArray = new int[]{1, 1};
-    private int[] mCurrentPageArray = new int[]{1, 1};
+    private final int[] mTotalPageArray = new int[]{1, 1};
+    private final int[] mCurrentPageArray = new int[]{1, 1};
     private int mTabIndex = 0;
 
-    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+    private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
             Intent intent = new Intent(getContext(), ThirdSendDetailActivity.class);
@@ -57,8 +57,8 @@ public final class ThirdSendFragment extends RefreshableTabFragment<ShopOrder, G
             return false;
         }
     };
-    private List<ShopOrderStatus> mCurShopOrderStatus = new ArrayList<>();
-    private List<SendType> mCurShopOrderSendType = new ArrayList<>();
+    private final List<ShopOrderStatus> mCurShopOrderStatus = new ArrayList<>();
+    private final List<SendType> mCurShopOrderSendType = new ArrayList<>();
 
     @NonNull
     @Override
@@ -81,11 +81,11 @@ public final class ThirdSendFragment extends RefreshableTabFragment<ShopOrder, G
         mCurShopOrderSendType.clear();
         mCurShopOrderStatus.clear();
         switch (tag) {
-            case R.string.tab_thirdsend_layout_unstart_title:
+            case R.string.Tab_ThirdSend_Layout_UNStart_Title:
                 mCurShopOrderSendType.add(SendType.THIRDSEND);
                 mCurShopOrderStatus.add(ShopOrderStatus.UNSTART);
                 break;
-            case R.string.tab_thirdsend_layout_doing_title:
+            case R.string.Tab_ThirdSend_Layout_Doing_Title:
                 mCurShopOrderSendType.add(SendType.THIRDSEND);
                 mCurShopOrderStatus.add(ShopOrderStatus.DOING);
                 break;
@@ -101,18 +101,18 @@ public final class ThirdSendFragment extends RefreshableTabFragment<ShopOrder, G
     }
 
     @Override
-    public void setCurrentPage(int currentpage) {
-        mCurrentPageArray[mTabIndex] = currentpage;
+    public void setCurrentPage(int currentPage) {
+        mCurrentPageArray[mTabIndex] = currentPage;
     }
 
     @Override
     public int getTotalPage() {
-        return mTotalpageArray[mTabIndex];
+        return mTotalPageArray[mTabIndex];
     }
 
     @Override
-    public void setTotalPage(int totalpage) {
-        mTotalpageArray[mTabIndex] = totalpage;
+    public void setTotalPage(int totalPage) {
+        mTotalPageArray[mTabIndex] = totalPage;
     }
 
     @NonNull
@@ -133,7 +133,7 @@ public final class ThirdSendFragment extends RefreshableTabFragment<ShopOrder, G
 
     @Override
     protected Observable<ResponseBean<GetShopOrderListResponse>> customGetData(int mCurrPage, int mPageSize) {
-        return shopOrderControllerApi.getShopOrderList(CommonApp.getApplication().getUserToken(), mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize);
+        return shopOrderControllerApi.getShopOrderList(mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
     }
 
     @Override

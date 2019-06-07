@@ -17,15 +17,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
+import cn.aijiamuyingfang.client.domain.shoporder.request.UpdateShopOrderStatusRequest;
+import cn.aijiamuyingfang.client.domain.user.RecieveAddress;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
-import cn.aijiamuyingfang.commons.domain.address.RecieveAddress;
-import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
-import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.commons.domain.shoporder.request.UpdateShopOrderStatusRequest;
-import cn.aijiamuyingfang.commons.utils.StringUtils;
+import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
+import cn.aijiamuyingfang.client.rest.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
+import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.Constant;
@@ -41,6 +43,8 @@ import io.reactivex.disposables.Disposable;
 
 public class ThirdSendDetailActivity extends BaseActivity {
     private static final String TAG = ThirdSendDetailActivity.class.getName();
+    private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
+    private static final UserControllerApi userControllerApi = new UserControllerClient();
     @BindView(R.id.toolbar)
     WeToolBar toolBar;
     @BindView(R.id.recycler_view)
@@ -56,11 +60,11 @@ public class ThirdSendDetailActivity extends BaseActivity {
     TextView mDetailAddressTextView;
     @BindView(R.id.shoporder_no)
     TextView mOrderNoTextView;
-    @BindView(R.id.shoporder_createtime)
+    @BindView(R.id.shoporder_create_time)
     TextView mCreateTimeTextView;
-    @BindView(R.id.thirdsend_company)
+    @BindView(R.id.third_send_company)
     ClearEditText mThirdSendCompanyEditText;
-    @BindView(R.id.thirdsend_no)
+    @BindView(R.id.third_send_no)
     ClearEditText mThirdSendNoEditText;
 
     @BindView((R.id.operator_ll))
@@ -72,8 +76,7 @@ public class ThirdSendDetailActivity extends BaseActivity {
     Button mSaveButton;
 
     private ShopOrder mShopOrder;
-    private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private List<Disposable> disposableList = new ArrayList<>();
+    private final List<Disposable> disposableList = new ArrayList<>();
 
     @Override
     protected void init() {
@@ -95,14 +98,26 @@ public class ThirdSendDetailActivity extends BaseActivity {
             mOperatorLinearLayout.setVisibility(View.INVISIBLE);
         }
 
-        mSendPriceTextView.setText("￥" + mShopOrder.getSendPrice());
-        mTotalPriceTextView.setText(Html.fromHtml("合计 ￥<span style='color:#eb4f38'>" + mShopOrder.getTotalPrice() + "</span>", Html.FROM_HTML_MODE_LEGACY),
+        mSendPriceTextView.setText(getString(R.string.Price, mShopOrder.getSendPrice()));
+        mTotalPriceTextView.setText(Html.fromHtml(getString(R.string.TotalPrice, mShopOrder.getTotalPrice()), Html.FROM_HTML_MODE_LEGACY),
                 TextView.BufferType.SPANNABLE);
-        mSendTypeTextView.setText(mShopOrder.getSendtype().name());
-        RecieveAddress recieveAddress = mShopOrder.getRecieveAddress();
-        mDetailAddressTextView.setText(recieveAddress.getReciever() + " " + recieveAddress.getPhone() + "\n" + recieveAddress.getProvince().getName()
-                + recieveAddress.getCity().getName()
-                + recieveAddress.getCounty().getName() + recieveAddress.getDetail());
+        mSendTypeTextView.setText(mShopOrder.getSendType().name());
+        userControllerApi.getRecieveAddress(mShopOrder.getUsername(), mShopOrder.getRecieveAddressId(), CommonApp.getApplication().getUserToken()).subscribe(responseBean -> {
+            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
+                RecieveAddress recieveAddress = responseBean.getData();
+                String addressInfo = recieveAddress.getReciever() + " " + recieveAddress.getPhone() + '\n' + recieveAddress.getProvince().getName()
+                        + recieveAddress.getCity().getName() + recieveAddress.getCounty().getName() + recieveAddress.getDetail();
+                mDetailAddressTextView.setText(addressInfo);
+            } else {
+                Log.e(TAG, responseBean.getMsg());
+                ToastUtils.showSafeToast(ThirdSendDetailActivity.this, getString(R.string.SERVER_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
+            }
+        }, throwable -> {
+            Log.e(TAG, "get ShopOrder recieve address failed", throwable);
+            ToastUtils.showSafeToast(ThirdSendDetailActivity.this, getString(R.string.CLIENT_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
+        });
+
+
         mOrderNoTextView.setText(mShopOrder.getOrderNo());
         mCreateTimeTextView.setText(DateUtils.date2String(mShopOrder.getCreateTime(), DateUtils.YMD_HMS_FORMAT));
         mThirdSendCompanyEditText.setText(mShopOrder.getThirdsendCompany());
@@ -121,20 +136,20 @@ public class ThirdSendDetailActivity extends BaseActivity {
     @OnClick(R.id.btn_save)
     public void onClick(View view) {
         mSaveButton.setClickable(false);
-        String thirdsendNo = mThirdSendNoEditText.getText().toString();
-        if (StringUtils.isEmpty(thirdsendNo)) {
+        String thirdSendNo = mThirdSendNoEditText.getText() != null ? mThirdSendNoEditText.getText().toString() : "";
+        if (StringUtils.isEmpty(thirdSendNo)) {
             ToastUtils.showSafeToast(ThirdSendDetailActivity.this, "请输入快递单号");
             mSaveButton.setClickable(true);
             return;
         }
 
-        String thirdsendCompany = mThirdSendCompanyEditText.getText().toString();
-        if (StringUtils.isEmpty(thirdsendCompany)) {
+        String thirdSendCompany = mThirdSendCompanyEditText.getText() != null ? mThirdSendCompanyEditText.getText().toString() : "";
+        if (StringUtils.isEmpty(thirdSendCompany)) {
             ToastUtils.showSafeToast(ThirdSendDetailActivity.this, "请填写快递公司");
             mSaveButton.setClickable(true);
             return;
         }
-        String operator = mOperatorEditText.getText().toString();
+        String operator = mOperatorEditText.getText() != null ? mOperatorEditText.getText().toString() : "";
         if (StringUtils.isEmpty(operator)) {
             ToastUtils.showSafeToast(ThirdSendDetailActivity.this, "请输操作员姓名");
             mSaveButton.setClickable(true);
@@ -143,9 +158,9 @@ public class ThirdSendDetailActivity extends BaseActivity {
         UpdateShopOrderStatusRequest updateBean = new UpdateShopOrderStatusRequest();
         updateBean.setStatus(ShopOrderStatus.DOING);
         updateBean.setOperator(operator);
-        updateBean.setThirdsendCompany(thirdsendCompany);
-        updateBean.setThirdsendno(thirdsendNo);
-        shopOrderControllerApi.updateShopOrderStatus(CommonApp.getApplication().getUserToken(), mShopOrder.getId(), updateBean)
+        updateBean.setThirdsendCompany(thirdSendCompany);
+        updateBean.setThirdsendno(thirdSendNo);
+        shopOrderControllerApi.updateShopOrderStatus(mShopOrder.getId(), updateBean, CommonApp.getApplication().getUserToken())
                 .subscribe(new Observer<ResponseBean<Void>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

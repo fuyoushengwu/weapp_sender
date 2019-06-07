@@ -14,6 +14,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -54,13 +55,14 @@
                 android:id="@+id/address_detailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
             <TextView
-                android:id="@+id/thirdsend_company"
+                android:id="@+id/third_send_company"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/thirdsend_no"
+                android:id="@+id/third_send_no"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

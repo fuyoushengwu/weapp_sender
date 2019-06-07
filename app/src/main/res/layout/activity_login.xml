@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="16dp"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context="cn.aijiamuyingfang.weapp.sender.LoginActivity">
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp">
 
     <!-- Login progress -->
     <ProgressBar
@@ -25,11 +23,11 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/logoScreenBackground">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -47,13 +45,13 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="160dp"
-                android:text="登录界面"
+                android:text="@string/Activity_Login_Title"
                 android:textColor="#000"
                 android:textSize="23sp"
                 android:typeface="monospace" />
 
             <RelativeLayout
-                android:id="@+id/rl_account"
+                android:id="@+id/rl_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_title"
@@ -61,63 +59,118 @@
                 android:background="@drawable/rectangle_edittext">
 
                 <ImageView
-                    android:id="@+id/iv_userIconPwd"
+                    android:id="@+id/iv_username_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="30dp"
+                    android:contentDescription="@string/Default_Content_Description"
                     android:paddingTop="15dp"
-                    android:src="@mipmap/ic_edittextupwd" />
+                    android:paddingBottom="15dp"
+                    android:src="@mipmap/ic_login_username" />
 
                 <View
                     android:id="@+id/viewPwd"
                     android:layout_width="1dip"
                     android:layout_height="20dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/iv_userIconPwd"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/iv_username_icon"
                     android:background="@color/colorCursor" />
 
                 <EditText
-                    android:id="@+id/et_account"
+                    android:id="@+id/et_username"
                     android:layout_width="match_parent"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/viewPwd"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/viewPwd"
                     android:background="@null"
                     android:drawablePadding="5dp"
                     android:ems="19"
-                    android:hint="登录账户"
+                    android:hint="@string/Activity_Login_UserName"
+                    android:inputType="text"
+                    android:textColor="#000"
+                    android:textCursorDrawable="@drawable/color_cursor"
+                    android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/iv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="@string/Default_Content_Description"
+                    android:src="@mipmap/ic_backspace_grey600_24dp"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rl_username"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/rectangle_edittext">
+
+                <ImageView
+                    android:id="@+id/iv_password_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/Default_Content_Description"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:src="@mipmap/ic_login_password" />
+
+                <View
+                    android:id="@+id/view_password"
+                    android:layout_width="1dip"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/iv_password_icon"
+                    android:background="@color/colorCursor" />
+
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/view_password"
+                    android:background="@null"
+                    android:drawablePadding="5dp"
+                    android:ems="19"
+                    android:hint="@string/Activity_Login_Password"
                     android:inputType="textPassword"
                     android:textColor="#000"
                     android:textCursorDrawable="@drawable/color_cursor"
                     android:textSize="15sp" />
 
                 <ImageView
-                    android:id="@+id/iv_account"
+                    android:id="@+id/iv_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:contentDescription="@string/Default_Content_Description"
                     android:src="@mipmap/ic_backspace_grey600_24dp"
                     android:visibility="invisible" />
-
             </RelativeLayout>
 
             <Button
                 android:id="@+id/btn_login"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_account"
+                android:layout_below="@id/rl_password"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/round_corner_bg"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="登录"
+                android:text="@string/Activity_Login_Button"
                 android:textColor="#fff"
                 android:textSize="18sp" />
 

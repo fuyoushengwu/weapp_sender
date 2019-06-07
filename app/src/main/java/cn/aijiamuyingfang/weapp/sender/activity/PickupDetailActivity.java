@@ -16,18 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
+import cn.aijiamuyingfang.client.domain.shoporder.request.UpdateShopOrderStatusRequest;
+import cn.aijiamuyingfang.client.domain.store.StoreAddress;
+import cn.aijiamuyingfang.client.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
+import cn.aijiamuyingfang.client.rest.api.StoreControllerApi;
 import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
-import cn.aijiamuyingfang.commons.domain.address.StoreAddress;
-import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
-import cn.aijiamuyingfang.commons.domain.response.ResponseCode;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.commons.domain.shoporder.request.UpdateShopOrderStatusRequest;
-import cn.aijiamuyingfang.commons.domain.user.User;
-import cn.aijiamuyingfang.commons.domain.user.response.GetUserPhoneResponse;
-import cn.aijiamuyingfang.commons.utils.StringUtils;
+import cn.aijiamuyingfang.client.rest.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
+import cn.aijiamuyingfang.weapp.manager.access.server.impl.StoreControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
@@ -44,6 +45,9 @@ import io.reactivex.disposables.Disposable;
 
 public class PickupDetailActivity extends BaseActivity {
     private static final String TAG = PickupDetailActivity.class.getName();
+    private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
+    private static final UserControllerApi userControllerApi = new UserControllerClient();
+    private static final StoreControllerApi storeControllerApi = new StoreControllerClient();
     @BindView(R.id.toolbar)
     WeToolBar toolBar;
     @BindView(R.id.operator_ll)
@@ -67,14 +71,11 @@ public class PickupDetailActivity extends BaseActivity {
     TextView mPickupTimeTextView;
     @BindView(R.id.shoporder_no)
     TextView mShopOrderNoTextView;
-    @BindView(R.id.shoporder_createtime)
+    @BindView(R.id.shoporder_create_time)
     TextView mCreateTimeTextView;
 
     private ShopOrder mShopOrder;
-
-    private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private UserControllerApi userControllerApi = new UserControllerClient();
-    private List<Disposable> disposableList = new ArrayList<>();
+    private final List<Disposable> disposableList = new ArrayList<>();
 
     @Override
     protected void init() {
@@ -86,69 +87,35 @@ public class PickupDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         mShopOrder = intent.getParcelableExtra(Constant.INTENT_SHOPORDER);
         if (mShopOrder.getStatus().equals(ShopOrderStatus.UNSTART)) {
-            toolBar.setTitle("订单详情(未开始)");
-            toolBar.setRightButtonText("开始");
-            toolBar.setRightButtonOnClickListener(v -> {
-                final Button button = toolBar.getRightButton();
-                button.setClickable(false);
-                String operator = mOperatorEditText.getText().toString();
-                if (StringUtils.isEmpty(operator)) {
-                    ToastUtils.showSafeToast(PickupDetailActivity.this, "请输操作员姓名");
-                    button.setClickable(true);
-                    return;
-                }
-                UpdateShopOrderStatusRequest updateBean = new UpdateShopOrderStatusRequest();
-                updateBean.setStatus(ShopOrderStatus.DOING);
-                updateBean.setOperator(operator);
-                updateBean.setThirdsendCompany("自取");
-                shopOrderControllerApi.updateShopOrderStatus(CommonApp.getApplication().getUserToken(),
-                        mShopOrder.getId(), updateBean).subscribe(new Observer<ResponseBean<Void>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        disposableList.add(d);
-                    }
-
-                    @Override
-                    public void onNext(ResponseBean<Void> responseBean) {
-                        if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                            PickupDetailActivity.this.finish();
-                        } else {
-                            Log.e(TAG, responseBean.getMsg());
-                            button.setClickable(true);
-                            ToastUtils.showSafeToast(PickupDetailActivity.this, "因服务端的原因,更新任务状态失败");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e(TAG, "update shoporder status failed", e);
-                        ToastUtils.showSafeToast(PickupDetailActivity.this, "因客户端的原因,更新任务状态失败");
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        Log.i(TAG, "update shoporder status complete");
-                    }
-                });
-            });
+            initUNStart();
         }
 
         if (mShopOrder.getStatus().equals(ShopOrderStatus.DOING)) {
-            toolBar.setTitle("订单详情(进行中)");
-            mOperatorLinearLayout.setVisibility(View.INVISIBLE);
+            initDoing();
         }
 
-        mTotalPriceTextView.setText(Html.fromHtml("合计 ￥<span style='color:#eb4f38'>" + mShopOrder.getTotalPrice() + "</span>", Html.FROM_HTML_MODE_LEGACY),
+        mTotalPriceTextView.setText(Html.fromHtml(getString(R.string.TotalPrice, mShopOrder.getTotalPrice()), Html.FROM_HTML_MODE_LEGACY),
                 TextView.BufferType.SPANNABLE);
-        mSendTypeTextView.setText(mShopOrder.getSendtype().name());
-        StoreAddress storeAddress = mShopOrder.getPickupAddress();
-        if (storeAddress != null) {
-            mPickupAddressTextView.setText(storeAddress.getPhone() + "\n" + storeAddress.getProvince().getName()
-                    + storeAddress.getCity().getName()
-                    + storeAddress.getCounty().getName() + storeAddress.getDetail());
-            mStoreContactNumberTextView.setText(storeAddress.getPhone());
-        }
-        userControllerApi.getUserPhone(CommonApp.getApplication().getUserToken(), mShopOrder.getUserid()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
+        mSendTypeTextView.setText(mShopOrder.getSendType().name());
+
+        storeControllerApi.getStoreAddressByAddressId(mShopOrder.getPickupStoreAddressId()).subscribe(responseBean -> {
+            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
+                StoreAddress storeAddress = responseBean.getData();
+                if (storeAddress != null) {
+                    String addressInfo = storeAddress.getPhone() + '\n' + storeAddress.getProvince().getName() + storeAddress.getCity().getName()
+                            + storeAddress.getCounty().getName() + storeAddress.getDetail();
+                    mPickupAddressTextView.setText(addressInfo);
+                    mStoreContactNumberTextView.setText(storeAddress.getPhone());
+                }
+            } else {
+                Log.e(TAG, responseBean.getMsg());
+                ToastUtils.showSafeToast(PickupDetailActivity.this, getString(R.string.SERVER_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
+            }
+        }, throwable -> {
+            Log.e(TAG, "get ShopOrder pickup address failed", throwable);
+            ToastUtils.showSafeToast(PickupDetailActivity.this, getString(R.string.CLIENT_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
+        });
+        userControllerApi.getUserPhone(mShopOrder.getUsername(), CommonApp.getApplication().getUserToken()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
             @Override
             public void onSubscribe(Disposable d) {
                 disposableList.add(d);
@@ -160,14 +127,14 @@ public class PickupDetailActivity extends BaseActivity {
                     mUserPhoneNumberTextView.setText(responseBean.getData().getPhone());
                 } else {
                     Log.e(TAG, responseBean.getMsg());
-                    ToastUtils.showSafeToast(PickupDetailActivity.this, "因服务端的原因,无法获取客户的电话号码");
+                    ToastUtils.showSafeToast(PickupDetailActivity.this, getString(R.string.SERVER_USER_EXCEPTION_GET_PHONE_MSG));
                 }
             }
 
             @Override
             public void onError(Throwable e) {
                 Log.e(TAG, "get user phone failed", e);
-                ToastUtils.showSafeToast(PickupDetailActivity.this, "因客户端的原因,无法获取客户的电话号码");
+                ToastUtils.showSafeToast(PickupDetailActivity.this, getString(R.string.CLIENT_USER_EXCEPTION_GET_PHONE_MSG));
             }
 
             @Override
@@ -175,9 +142,46 @@ public class PickupDetailActivity extends BaseActivity {
                 Log.i(TAG, "get user phone complete");
             }
         });
+
         mPickupTimeTextView.setText(DateUtils.date2String(mShopOrder.getPickupTime(), DateUtils.YMD_HMS_FORMAT));
-        mShopOrderNoTextView.setText(mShopOrder.getOrderNo());
         mCreateTimeTextView.setText(DateUtils.date2String(mShopOrder.getCreateTime(), DateUtils.YMD_HMS_FORMAT));
+        mShopOrderNoTextView.setText(mShopOrder.getOrderNo());
+    }
+
+    private void initUNStart() {
+        toolBar.setTitle("订单详情(未开始)");
+        toolBar.setRightButtonText("开始");
+        toolBar.setRightButtonOnClickListener(v -> {
+            final Button button = toolBar.getRightButton();
+            button.setClickable(false);
+            String operator = mOperatorEditText.getText() != null ? mOperatorEditText.getText().toString() : "";
+            if (StringUtils.isEmpty(operator)) {
+                ToastUtils.showSafeToast(PickupDetailActivity.this, "请输操作员姓名");
+                button.setClickable(true);
+                return;
+            }
+            UpdateShopOrderStatusRequest updateBean = new UpdateShopOrderStatusRequest();
+            updateBean.setStatus(ShopOrderStatus.DOING);
+            updateBean.setOperator(operator);
+            updateBean.setThirdsendCompany("自取");
+            shopOrderControllerApi.updateShopOrderStatus(mShopOrder.getId(), updateBean, CommonApp.getApplication().getUserToken()).subscribe(responseBean -> {
+                if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
+                    PickupDetailActivity.this.finish();
+                } else {
+                    Log.e(TAG, responseBean.getMsg());
+                    button.setClickable(true);
+                    ToastUtils.showSafeToast(PickupDetailActivity.this, "因服务端的原因,更新任务状态失败");
+                }
+            }, throwable -> {
+                Log.e(TAG, "update shoporder status failed", throwable);
+                ToastUtils.showSafeToast(PickupDetailActivity.this, "因客户端的原因,更新任务状态失败");
+            });
+        });
+    }
+
+    private void initDoing() {
+        toolBar.setTitle("订单详情(进行中)");
+        mOperatorLinearLayout.setVisibility(View.INVISIBLE);
     }
 
     private void initAdapter() {

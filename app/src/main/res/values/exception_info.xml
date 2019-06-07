@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="SERVER_GOOD_EXCEPTION_GET_FAILED_MSG">因服务端异常,获取商品信息失败</string>
+    <string name="SERVER_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG">因服务端异常,获取订单收件地址失败</string>
+    <string name="SERVER_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG">因服务端异常,获取取货门店地址信息失败</string>
+    <string name="SERVER_SHOPORDER_EXCEPTION_DELETE_FAILED_MSG">因服务端异常,删除订单任务失败</string>
+    <string name="SERVER_USER_EXCEPTION_GET_PHONE_MSG">因服务端异常,无法获取客户的电话号码</string>
+    <string name="SERVER_LOGIN_EXCEPTION_FAILED_MSG">因服务端异常,用户登录失败</string>
+
+    <string name="CLIENT_GOOD_EXCEPTION_GET_FAILED_MSG">因客户端异常,获取商品信息失败</string>
+    <string name="CLIENT_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG">因客户端异常,获取订单收件地址失败</string>
+    <string name="CLIENT_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG">因客户端异常,获取取货门店地址信息失败</string>
+    <string name="CLIENT_SHOPORDER_EXCEPTION_DELETE_FAILED_MSG">因客户端异常,删除订单任务失败</string>
+    <string name="CLIENT_USER_EXCEPTION_GET_PHONE_MSG">因客户端异常,无法获取客户的电话号码</string>
+    <string name="CLIENT_LOGIN_EXCEPTION_FAILED_MSG">因客户端异常,用户登录失败</string>
+</resources>

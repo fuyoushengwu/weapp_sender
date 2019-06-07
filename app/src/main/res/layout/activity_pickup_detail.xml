@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clipToPadding="true"
         android:fitsSystemWindows="true"
         android:focusable="true"
@@ -31,9 +31,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_weight="1"
-                android:text="操作员"
+                android:text="@string/Activity_PickUP_Detail_Operator"
                 android:textSize="20sp" />
 
             <cn.aijiamuyingfang.weapp.manager.widgets.ClearEditText
@@ -42,14 +42,16 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="2"
-                android:hint="请输入操作员姓名"
+                android:hint="@string/Activity_PickUP_Detail_Operator_Tip"
                 android:textSize="20sp" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.RecyclerView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,9 +61,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="25dp"
                 android:layout_weight="1"
-                android:text="总价"
+                android:text="@string/Activity_PickUP_Detail_Price"
                 android:textSize="20sp" />
 
             <TextView
@@ -85,9 +87,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="配送方式"
+                    android:text="@string/Activity_PickUP_Detail_Send_Type"
                     android:textSize="20sp" />
 
                 <TextView
@@ -106,9 +108,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="取货地址"
+                    android:text="@string/Activity_PickUP_Detail_PickUP_Address"
                     android:textSize="20sp" />
 
                 <TextView
@@ -127,9 +129,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="门店电话"
+                    android:text="@string/Activity_PickUP_Detail_Store_Phone"
                     android:textSize="20sp" />
 
                 <TextView
@@ -148,9 +150,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="用户电话"
+                    android:text="@string/Activity_PickUP_Detail_Recieve_Phone"
                     android:textSize="20sp" />
 
                 <TextView
@@ -169,9 +171,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="取货时间"
+                    android:text="@string/Activity_PickUP_Detail_PickUP_Time"
                     android:textSize="20sp" />
 
                 <TextView
@@ -190,9 +192,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="订单号"
+                    android:text="@string/Activity_PickUP_Detail_Order_No"
                     android:textSize="20sp" />
 
                 <TextView
@@ -211,13 +213,13 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
                     android:layout_weight="1"
-                    android:text="创建时间"
+                    android:text="@string/Activity_PickUP_Detail_Order_CreateTime"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/shoporder_createtime"
+                    android:id="@+id/shoporder_create_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"

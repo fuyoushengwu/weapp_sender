@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="商品名" />
+                android:text="@string/Adapter_Item_PreOrder_Good_Good_Name" />
 
             <TextView
                 android:id="@+id/good_name"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="商品数量" />
+                android:text="@string/Adapter_Item_PreOrder_Good_Good_Count" />
 
             <TextView
                 android:id="@+id/good_count"

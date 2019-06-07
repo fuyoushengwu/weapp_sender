@@ -7,16 +7,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.domain.shoporder.SendType;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
+import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
+import cn.aijiamuyingfang.client.domain.shoporder.response.GetShopOrderListResponse;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
-import cn.aijiamuyingfang.commons.domain.response.ResponseBean;
-import cn.aijiamuyingfang.commons.domain.shoporder.SendType;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.commons.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.commons.domain.shoporder.response.GetShopOrderListResponse;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.CommonAdapter;
@@ -27,24 +26,24 @@ import cn.aijiamuyingfang.weapp.sender.recycleadapter.FinishedPickupAdapter;
 import cn.aijiamuyingfang.weapp.sender.recycleadapter.FinishedThirdSendAdapter;
 import io.reactivex.Observable;
 
+import static java.util.Arrays.*;
+
 /**
  * Created by pc on 2018/5/7.
  */
 
 public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, GetShopOrderListResponse> {
-    private ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private List<Integer> mTabTitleList = Arrays.asList(R.string.tab_finished_layout_thirdsend_title,
-            R.string.tab_finished_layout_ownsend_title, R.string.tab_finished_layout_pickup_title);
-    private List<CommonAdapter<ShopOrder>> mAdapterList = Arrays.asList(
+    private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
+    private static final List<Integer> mTabTitleList = asList(R.string.Tab_Finished_Layout_ThirdSend_Title,
+            R.string.Tab_Finished_Layout_OwnSend_Title, R.string.Tab_Finished_Layout_PickUP_Title);
+    private final List<CommonAdapter<ShopOrder>> mAdapterList = asList(
             new FinishedThirdSendAdapter(CommonApp.getApplication(), new ArrayList<>()),
             new FinishedOwnSendAdapter(CommonApp.getApplication(), new ArrayList<>()),
             new FinishedPickupAdapter(CommonApp.getApplication(), new ArrayList<>())
     );
-    private int[] mTotalpageArray = new int[]{1, 1, 1};
-    private int[] mCurrentPageArray = new int[]{1, 1, 1};
-    private int mTabIndex = 0;
-
-    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+    private final int[] mTotalPageArray = new int[]{1, 1, 1};
+    private final int[] mCurrentPageArray = new int[]{1, 1, 1};
+    private final OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, RecyclerView.ViewHolder viewHolder, int position) {
         }
@@ -54,8 +53,9 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Ge
             return false;
         }
     };
-    private List<ShopOrderStatus> mCurShopOrderStatus = new ArrayList<>();
-    private List<SendType> mCurShopOrderSendType = new ArrayList<>();
+    private final List<ShopOrderStatus> mCurShopOrderStatus = new ArrayList<>();
+    private final List<SendType> mCurShopOrderSendType = new ArrayList<>();
+    private int mTabIndex = 0;
 
     @NonNull
     @Override
@@ -78,15 +78,15 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Ge
         mCurShopOrderSendType.clear();
         mCurShopOrderStatus.clear();
         switch (tag) {
-            case R.string.tab_finished_layout_thirdsend_title:
+            case R.string.Tab_Finished_Layout_ThirdSend_Title:
                 mCurShopOrderSendType.add(SendType.THIRDSEND);
                 mCurShopOrderStatus.add(ShopOrderStatus.FINISHED);
                 break;
-            case R.string.tab_finished_layout_ownsend_title:
+            case R.string.Tab_Finished_Layout_OwnSend_Title:
                 mCurShopOrderSendType.add(SendType.OWNSEND);
                 mCurShopOrderStatus.add(ShopOrderStatus.FINISHED);
                 break;
-            case R.string.tab_finished_layout_pickup_title:
+            case R.string.Tab_Finished_Layout_PickUP_Title:
                 mCurShopOrderSendType.add(SendType.PICKUP);
                 mCurShopOrderStatus.add(ShopOrderStatus.FINISHED);
                 break;
@@ -102,18 +102,18 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Ge
     }
 
     @Override
-    public void setCurrentPage(int currentpage) {
-        mCurrentPageArray[mTabIndex] = currentpage;
+    public void setCurrentPage(int currentPage) {
+        mCurrentPageArray[mTabIndex] = currentPage;
     }
 
     @Override
     public int getTotalPage() {
-        return mTotalpageArray[mTabIndex];
+        return mTotalPageArray[mTabIndex];
     }
 
     @Override
-    public void setTotalPage(int totalpage) {
-        mTotalpageArray[mTabIndex] = totalpage;
+    public void setTotalPage(int totalPage) {
+        mTotalPageArray[mTabIndex] = totalPage;
     }
 
     @NonNull
@@ -134,7 +134,7 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Ge
 
     @Override
     protected Observable<ResponseBean<GetShopOrderListResponse>> customGetData(int mCurrPage, int mPageSize) {
-        return shopOrderControllerApi.getShopOrderList(CommonApp.getApplication().getUserToken(), mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize);
+        return shopOrderControllerApi.getShopOrderList(mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
     }
 
     @Override
