@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.aijiamuyingfang.client.oauth2.OAuthResponse;
-import cn.aijiamuyingfang.client.rest.utils.StringUtils;
+import cn.aijiamuyingfang.client.commons.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.OAuth2Utils;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;

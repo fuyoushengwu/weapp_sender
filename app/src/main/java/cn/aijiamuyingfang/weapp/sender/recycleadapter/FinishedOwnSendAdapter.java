@@ -6,8 +6,8 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.aijiamuyingfang.client.domain.ResponseBean;
-import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
+import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
 import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderItem;
 import cn.aijiamuyingfang.client.domain.user.RecieveAddress;

@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import cn.aijiamuyingfang.client.domain.PageResponse;
-import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.commons.domain.PageResponse;
+import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
 import cn.aijiamuyingfang.client.domain.previeworder.PreOrderGood;
 import cn.aijiamuyingfang.client.domain.previeworder.response.GetPreOrderGoodListResponse;
 import cn.aijiamuyingfang.client.domain.shoporder.SendType;

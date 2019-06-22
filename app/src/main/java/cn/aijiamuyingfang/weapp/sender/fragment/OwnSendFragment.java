@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import cn.aijiamuyingfang.client.domain.ResponseBean;
+import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
 import cn.aijiamuyingfang.client.domain.shoporder.SendType;
 import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;

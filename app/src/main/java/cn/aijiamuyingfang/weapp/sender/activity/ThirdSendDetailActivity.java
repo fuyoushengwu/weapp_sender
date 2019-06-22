@@ -17,15 +17,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.aijiamuyingfang.client.domain.ResponseBean;
-import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
+import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
 import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
 import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
 import cn.aijiamuyingfang.client.domain.shoporder.request.UpdateShopOrderStatusRequest;
 import cn.aijiamuyingfang.client.domain.user.RecieveAddress;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
 import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
-import cn.aijiamuyingfang.client.rest.utils.StringUtils;
+import cn.aijiamuyingfang.client.commons.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;

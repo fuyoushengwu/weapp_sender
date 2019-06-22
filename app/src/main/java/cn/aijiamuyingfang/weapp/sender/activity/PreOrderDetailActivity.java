@@ -12,12 +12,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.aijiamuyingfang.client.domain.ResponseBean;
-import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
+import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
 import cn.aijiamuyingfang.client.domain.goods.Good;
 import cn.aijiamuyingfang.client.domain.previeworder.PreOrderGood;
 import cn.aijiamuyingfang.client.rest.api.GoodControllerApi;
-import cn.aijiamuyingfang.client.rest.utils.StringUtils;
+import cn.aijiamuyingfang.client.commons.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.GoodControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;

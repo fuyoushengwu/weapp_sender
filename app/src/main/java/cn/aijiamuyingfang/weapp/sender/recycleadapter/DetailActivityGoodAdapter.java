@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import java.util.List;
 
-import cn.aijiamuyingfang.client.domain.ResponseCode;
+import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
 import cn.aijiamuyingfang.client.domain.goods.Good;
 import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderItem;
 import cn.aijiamuyingfang.client.rest.api.GoodControllerApi;
