@@ -12,12 +12,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
-import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
-import cn.aijiamuyingfang.client.domain.goods.Good;
-import cn.aijiamuyingfang.client.domain.previeworder.PreOrderGood;
 import cn.aijiamuyingfang.client.rest.api.GoodControllerApi;
-import cn.aijiamuyingfang.client.commons.utils.StringUtils;
+import cn.aijiamuyingfang.vo.goods.Good;
+import cn.aijiamuyingfang.vo.preorder.PreOrderGood;
+import cn.aijiamuyingfang.vo.response.ResponseBean;
+import cn.aijiamuyingfang.vo.response.ResponseCode;
+import cn.aijiamuyingfang.vo.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.GoodControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
@@ -58,23 +58,13 @@ public class PreOrderDetailActivity extends BaseActivity {
     private void initData() {
         Intent intent = getIntent();
         PreOrderGood mPreOrderGood = intent.getParcelableExtra(Constant.INTENT_SHOPORDER);
-        goodControllerApi.getGood(mPreOrderGood.getGoodId()).subscribe(responseBean -> {
-            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                Good good = responseBean.getData();
-                GlideUtils.load(this, good.getCoverImg().getUrl(), mGoodCoverImageView);
-                mGoodNameTextView.setText(good.getName());
-                mGoodPriceTextView.setText(getString(R.string.Price, good.getPrice()));
-                mGoodUnitTextView.setText(getString(R.string.Good_Pack, good.getPack()));
-                mGoodLevelTextView.setText(getString(R.string.Good_Level, good.getLevel()));
-                mGoodCountView.setText(getString(R.string.Good_Count, good.getCount()));
-            } else {
-                Log.e(TAG, responseBean.getMsg());
-                ToastUtils.showSafeToast(PreOrderDetailActivity.this, "因服务端的原因,导致获取预订单商品信息失败");
-            }
-        }, throwable -> {
-            Log.e(TAG, "get pre order good info failed", throwable);
-            ToastUtils.showSafeToast(PreOrderDetailActivity.this, "因服务端的原因,导致获取预订单商品信息失败");
-        });
+        Good good = mPreOrderGood.getGood();
+        GlideUtils.load(this, good.getCoverImg().getUrl(), mGoodCoverImageView);
+        mGoodNameTextView.setText(good.getName());
+        mGoodPriceTextView.setText(getString(R.string.Price, good.getPrice()));
+        mGoodUnitTextView.setText(getString(R.string.Good_Pack, good.getPack()));
+        mGoodLevelTextView.setText(getString(R.string.Good_Level, good.getLevel()));
+        mGoodCountView.setText(getString(R.string.Good_Count, good.getCount()));
 
     }
 

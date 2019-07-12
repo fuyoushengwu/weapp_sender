@@ -43,6 +43,7 @@
         <activity android:name=".activity.OwnSendDetailActivity" />
         <activity android:name=".activity.PickupDetailActivity" />
         <activity android:name=".activity.PreOrderDetailActivity" />
+        <activity android:name="cn.aijiamuyingfang.weapp.manager.commons.activity.PermissionActivity" />
     </application>
 
 </manifest>

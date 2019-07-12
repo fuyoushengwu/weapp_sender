@@ -12,12 +12,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
-import cn.aijiamuyingfang.client.domain.shoporder.SendType;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.client.domain.shoporder.response.GetShopOrderListResponse;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
+import cn.aijiamuyingfang.vo.response.ResponseBean;
+import cn.aijiamuyingfang.vo.shoporder.PagableShopOrderList;
+import cn.aijiamuyingfang.vo.shoporder.SendType;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrder;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrderStatus;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.Constant;
@@ -33,7 +33,7 @@ import io.reactivex.Observable;
  * Created by pc on 2018/5/7.
  */
 
-public final class PickupFragment extends RefreshableTabFragment<ShopOrder, GetShopOrderListResponse> {
+public final class PickupFragment extends RefreshableTabFragment<ShopOrder, PagableShopOrderList> {
     private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
     private static final List<Integer> mTabTitleList = Arrays.asList(R.string.Tab_PickUP_Layout_UNStart_Title, R.string.Tab_PickUP_Layout_Doing_Title);
     private final List<CommonAdapter<ShopOrder>> mAdapterList = Arrays.asList(
@@ -131,7 +131,7 @@ public final class PickupFragment extends RefreshableTabFragment<ShopOrder, GetS
     }
 
     @Override
-    protected Observable<ResponseBean<GetShopOrderListResponse>> customGetData(int mCurrPage, int mPageSize) {
+    protected Observable<ResponseBean<PagableShopOrderList>> customGetData(int mCurrPage, int mPageSize) {
         return shopOrderControllerApi.getShopOrderList(mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
     }
 

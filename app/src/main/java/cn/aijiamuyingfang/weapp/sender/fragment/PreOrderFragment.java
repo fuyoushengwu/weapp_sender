@@ -12,14 +12,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import cn.aijiamuyingfang.client.commons.domain.PageResponse;
-import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
-import cn.aijiamuyingfang.client.domain.previeworder.PreOrderGood;
-import cn.aijiamuyingfang.client.domain.previeworder.response.GetPreOrderGoodListResponse;
-import cn.aijiamuyingfang.client.domain.shoporder.SendType;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.client.domain.shoporder.response.GetShopOrderListResponse;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
+import cn.aijiamuyingfang.vo.preorder.PagablePreOrderGoodList;
+import cn.aijiamuyingfang.vo.preorder.PreOrderGood;
+import cn.aijiamuyingfang.vo.response.PageResponse;
+import cn.aijiamuyingfang.vo.response.ResponseBean;
+import cn.aijiamuyingfang.vo.shoporder.PagableShopOrderList;
+import cn.aijiamuyingfang.vo.shoporder.SendType;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrderStatus;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.Constant;
@@ -119,7 +119,7 @@ public final class PreOrderFragment extends RefreshableTabFragment<Object, PageR
     protected Observable<ResponseBean<PageResponse<Object>>> customGetData(int mCurrPage, int mPageSize) {
         synchronized (this) {
             if (null == getPreOrderGoodList) {
-                Observable<ResponseBean<GetPreOrderGoodListResponse>> observable1 = shopOrderControllerApi.getPreOrderGoodList(
+                Observable<ResponseBean<PagablePreOrderGoodList>> observable1 = shopOrderControllerApi.getPreOrderGoodList(
                         mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
                 getPreOrderGoodList = observable1.map(responseBean -> {
                     if (null == responseBean) {
@@ -136,7 +136,7 @@ public final class PreOrderFragment extends RefreshableTabFragment<Object, PageR
                 List<SendType> sendType = new ArrayList<>();
                 List<ShopOrderStatus> status = new ArrayList<>();
                 status.add(ShopOrderStatus.PREORDER);
-                Observable<ResponseBean<GetShopOrderListResponse>> observable2 = shopOrderControllerApi.getShopOrderList(
+                Observable<ResponseBean<PagableShopOrderList>> observable2 = shopOrderControllerApi.getShopOrderList(
                         status, sendType, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
                 getShopOrderList = observable2.map(responseBean -> {
                     if (null == responseBean) {

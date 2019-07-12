@@ -5,19 +5,15 @@ import android.util.Log;
 
 import java.util.List;
 
-import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
-import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderItem;
-import cn.aijiamuyingfang.client.domain.store.StoreAddress;
-import cn.aijiamuyingfang.client.domain.user.response.GetUserPhoneResponse;
-import cn.aijiamuyingfang.client.rest.api.StoreControllerApi;
 import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
-import cn.aijiamuyingfang.weapp.manager.access.server.impl.StoreControllerClient;
+import cn.aijiamuyingfang.vo.response.ResponseBean;
+import cn.aijiamuyingfang.vo.response.ResponseCode;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrder;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrderItem;
+import cn.aijiamuyingfang.vo.store.StoreAddress;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.utils.DateUtils;
-import cn.aijiamuyingfang.weapp.manager.commons.utils.ToastUtils;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.CommonAdapter;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.RecyclerViewHolder;
 import cn.aijiamuyingfang.weapp.sender.R;
@@ -30,7 +26,6 @@ import io.reactivex.disposables.Disposable;
 
 public class PickupUnStartAdapter extends CommonAdapter<ShopOrder> {
     private static final String TAG = PickupUnStartAdapter.class.getName();
-    private static final StoreControllerApi storeControllerApi = new StoreControllerClient();
     private static final UserControllerApi userControllerApi = new UserControllerClient();
 
     public PickupUnStartAdapter(Context context, List<ShopOrder> data) {
@@ -41,38 +36,27 @@ public class PickupUnStartAdapter extends CommonAdapter<ShopOrder> {
     protected void convert(final RecyclerViewHolder viewHolder, final ShopOrder itemData, int position) {
         StringBuilder sb = new StringBuilder();
         for (ShopOrderItem orderGood : itemData.getOrderItemList()) {
-            sb.append(orderGood.getGoodName()).append("*").append(orderGood.getCount()).append("\n");
+            sb.append(orderGood.getGood().getName()).append("*").append(orderGood.getCount()).append("\n");
         }
         viewHolder.setText(R.id.goods, sb.toString());
         viewHolder.setText(R.id.total_price, "总价:" + itemData.getTotalPrice());
 
-        storeControllerApi.getStoreAddressByAddressId(itemData.getPickupStoreAddressId()).subscribe(responseBean -> {
-            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                StoreAddress storeAddress = responseBean.getData();
-                if (storeAddress != null) {
-                    viewHolder.setText(R.id.pickup_address, "取货地址:" + storeAddress.getDetail());
-                    viewHolder.setText(R.id.store_contactNumber, "门店联系电话:" + storeAddress.getPhone());
-                }
+        StoreAddress storeAddress = itemData.getStoreAddress();
+        if (storeAddress != null) {
+            viewHolder.setText(R.id.pickup_address, "取货地址:" + storeAddress.getDetail());
+            viewHolder.setText(R.id.store_contactNumber, "门店联系电话:" + storeAddress.getPhone());
+        }
 
-            } else {
-                Log.e(TAG, responseBean.getMsg());
-                ToastUtils.showSafeToast(mContext, mContext.getString(R.string.SERVER_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-            }
-        }, throwable -> {
-            Log.e(TAG, "get ShopOrder pickup address failed", throwable);
-            ToastUtils.showSafeToast(mContext, mContext.getString(R.string.CLIENT_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-        });
-
-        userControllerApi.getUserPhone(itemData.getUsername(), CommonApp.getApplication().getUserToken()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
+        userControllerApi.getUserPhone(itemData.getUsername(), CommonApp.getApplication().getUserToken()).subscribe(new Observer<ResponseBean<String>>() {
             @Override
             public void onSubscribe(Disposable d) {
                 //DO NOT NEED IMPLEMENT
             }
 
             @Override
-            public void onNext(ResponseBean<GetUserPhoneResponse> responseBean) {
+            public void onNext(ResponseBean<String> responseBean) {
                 if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                    viewHolder.setText(R.id.user_phoneNumber, "用户电话:" + responseBean.getData().getPhone());
+                    viewHolder.setText(R.id.user_phoneNumber, "用户电话:" + responseBean.getData());
                 } else {
                     Log.e(TAG, responseBean.getMsg());
                 }

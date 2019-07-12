@@ -17,17 +17,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
-import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.client.domain.shoporder.request.UpdateShopOrderStatusRequest;
-import cn.aijiamuyingfang.client.domain.user.RecieveAddress;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
-import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
-import cn.aijiamuyingfang.client.commons.utils.StringUtils;
+import cn.aijiamuyingfang.vo.response.ResponseBean;
+import cn.aijiamuyingfang.vo.response.ResponseCode;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrder;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrderStatus;
+import cn.aijiamuyingfang.vo.shoporder.UpdateShopOrderStatusRequest;
+import cn.aijiamuyingfang.vo.user.RecieveAddress;
+import cn.aijiamuyingfang.vo.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
-import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.Constant;
@@ -44,7 +42,6 @@ import io.reactivex.disposables.Disposable;
 public class OwnSendDetailActivity extends BaseActivity {
     private static final String TAG = OwnSendDetailActivity.class.getName();
     private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private static final UserControllerApi userControllerApi = new UserControllerClient();
 
     @BindView(R.id.toolbar)
     WeToolBar toolBar;
@@ -104,24 +101,13 @@ public class OwnSendDetailActivity extends BaseActivity {
                 TextView.BufferType.SPANNABLE);
 
         mSendTypeTextView.setText(mShopOrder.getSendType().name());
-        userControllerApi.getRecieveAddress(mShopOrder.getUsername(), mShopOrder.getRecieveAddressId(), CommonApp.getApplication().getUserToken())
-                .subscribe(responseBean -> {
-                    if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                        RecieveAddress recieveAddress = responseBean.getData();
-                        String addressInfo = recieveAddress.getReciever() + " " + recieveAddress.getPhone() + '\n' + recieveAddress.getProvince().getName()
-                                + recieveAddress.getCity().getName() + recieveAddress.getCounty().getName() + recieveAddress.getDetail();
-                        mDetailAddressTextView.setText(addressInfo);
-                        mOrderNoTextView.setText(mShopOrder.getOrderNo());
-                        mCreateTimeTextView.setText(DateUtils.date2String(mShopOrder.getCreateTime(), DateUtils.YMD_HMS_FORMAT));
-                        mSenderNameEditText.setText(mShopOrder.getThirdsendNo());
-                    } else {
-                        Log.e(TAG, responseBean.getMsg());
-                        ToastUtils.showSafeToast(OwnSendDetailActivity.this, getString(R.string.SERVER_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-                    }
-                }, throwable -> {
-                    Log.e(TAG, "get ShopOrder recieve address failed", throwable);
-                    ToastUtils.showSafeToast(OwnSendDetailActivity.this, getString(R.string.CLIENT_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-                });
+        RecieveAddress recieveAddress = mShopOrder.getRecieveAddress();
+        String addressInfo = recieveAddress.getReciever() + " " + recieveAddress.getPhone() + '\n' + recieveAddress.getProvince().getName()
+                + recieveAddress.getCity().getName() + recieveAddress.getCounty().getName() + recieveAddress.getDetail();
+        mDetailAddressTextView.setText(addressInfo);
+        mOrderNoTextView.setText(mShopOrder.getOrderNo());
+        mCreateTimeTextView.setText(DateUtils.date2String(mShopOrder.getCreateTime(), DateUtils.YMD_HMS_FORMAT));
+        mSenderNameEditText.setText(mShopOrder.getThirdsendNo());
     }
 
     private void initAdapter() {

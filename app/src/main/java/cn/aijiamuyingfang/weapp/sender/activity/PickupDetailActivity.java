@@ -16,19 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
-import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderStatus;
-import cn.aijiamuyingfang.client.domain.shoporder.request.UpdateShopOrderStatusRequest;
-import cn.aijiamuyingfang.client.domain.store.StoreAddress;
-import cn.aijiamuyingfang.client.domain.user.response.GetUserPhoneResponse;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
-import cn.aijiamuyingfang.client.rest.api.StoreControllerApi;
 import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
-import cn.aijiamuyingfang.client.commons.utils.StringUtils;
+import cn.aijiamuyingfang.vo.response.ResponseBean;
+import cn.aijiamuyingfang.vo.response.ResponseCode;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrder;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrderStatus;
+import cn.aijiamuyingfang.vo.shoporder.UpdateShopOrderStatusRequest;
+import cn.aijiamuyingfang.vo.store.StoreAddress;
+import cn.aijiamuyingfang.vo.utils.StringUtils;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
-import cn.aijiamuyingfang.weapp.manager.access.server.impl.StoreControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.utils.RxJavaUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
@@ -47,7 +44,6 @@ public class PickupDetailActivity extends BaseActivity {
     private static final String TAG = PickupDetailActivity.class.getName();
     private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
     private static final UserControllerApi userControllerApi = new UserControllerClient();
-    private static final StoreControllerApi storeControllerApi = new StoreControllerClient();
     @BindView(R.id.toolbar)
     WeToolBar toolBar;
     @BindView(R.id.operator_ll)
@@ -98,33 +94,23 @@ public class PickupDetailActivity extends BaseActivity {
                 TextView.BufferType.SPANNABLE);
         mSendTypeTextView.setText(mShopOrder.getSendType().name());
 
-        storeControllerApi.getStoreAddressByAddressId(mShopOrder.getPickupStoreAddressId()).subscribe(responseBean -> {
-            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                StoreAddress storeAddress = responseBean.getData();
-                if (storeAddress != null) {
-                    String addressInfo = storeAddress.getPhone() + '\n' + storeAddress.getProvince().getName() + storeAddress.getCity().getName()
-                            + storeAddress.getCounty().getName() + storeAddress.getDetail();
-                    mPickupAddressTextView.setText(addressInfo);
-                    mStoreContactNumberTextView.setText(storeAddress.getPhone());
-                }
-            } else {
-                Log.e(TAG, responseBean.getMsg());
-                ToastUtils.showSafeToast(PickupDetailActivity.this, getString(R.string.SERVER_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-            }
-        }, throwable -> {
-            Log.e(TAG, "get ShopOrder pickup address failed", throwable);
-            ToastUtils.showSafeToast(PickupDetailActivity.this, getString(R.string.CLIENT_SHOPORDER_STORE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-        });
-        userControllerApi.getUserPhone(mShopOrder.getUsername(), CommonApp.getApplication().getUserToken()).subscribe(new Observer<ResponseBean<GetUserPhoneResponse>>() {
+        StoreAddress storeAddress = mShopOrder.getStoreAddress();
+        if (storeAddress != null) {
+            String addressInfo = storeAddress.getPhone() + '\n' + storeAddress.getProvince().getName() + storeAddress.getCity().getName()
+                    + storeAddress.getCounty().getName() + storeAddress.getDetail();
+            mPickupAddressTextView.setText(addressInfo);
+            mStoreContactNumberTextView.setText(storeAddress.getPhone());
+        }
+        userControllerApi.getUserPhone(mShopOrder.getUsername(), CommonApp.getApplication().getUserToken()).subscribe(new Observer<ResponseBean<String>>() {
             @Override
             public void onSubscribe(Disposable d) {
                 disposableList.add(d);
             }
 
             @Override
-            public void onNext(ResponseBean<GetUserPhoneResponse> responseBean) {
+            public void onNext(ResponseBean<String> responseBean) {
                 if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                    mUserPhoneNumberTextView.setText(responseBean.getData().getPhone());
+                    mUserPhoneNumberTextView.setText(responseBean.getData());
                 } else {
                     Log.e(TAG, responseBean.getMsg());
                     ToastUtils.showSafeToast(PickupDetailActivity.this, getString(R.string.SERVER_USER_EXCEPTION_GET_PHONE_MSG));

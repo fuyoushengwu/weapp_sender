@@ -6,15 +6,13 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderItem;
-import cn.aijiamuyingfang.client.domain.store.StoreAddress;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
-import cn.aijiamuyingfang.client.rest.api.StoreControllerApi;
 import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
+import cn.aijiamuyingfang.vo.response.ResponseCode;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrder;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrderItem;
+import cn.aijiamuyingfang.vo.store.StoreAddress;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
-import cn.aijiamuyingfang.weapp.manager.access.server.impl.StoreControllerClient;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.utils.DateUtils;
@@ -31,7 +29,6 @@ public class FinishedPickupAdapter extends CommonAdapter<ShopOrder> {
     private static final String TAG = FinishedPickupAdapter.class.getName();
     private static final UserControllerApi userControllerApi = new UserControllerClient();
     private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private static final StoreControllerApi storeControllerApi = new StoreControllerClient();
 
     public FinishedPickupAdapter(Context context, List<ShopOrder> data) {
         super(context, data, R.layout.adapter_item_finished_pickup);
@@ -41,29 +38,19 @@ public class FinishedPickupAdapter extends CommonAdapter<ShopOrder> {
     protected void convert(final RecyclerViewHolder viewHolder, final ShopOrder itemData, final int position) {
         StringBuilder sb = new StringBuilder();
         for (ShopOrderItem orderGood : itemData.getOrderItemList()) {
-            sb.append(orderGood.getGoodName()).append("*").append(orderGood.getCount()).append("\n");
+            sb.append(orderGood.getGood().getName()).append("*").append(orderGood.getCount()).append("\n");
         }
         viewHolder.setText(R.id.goods, sb.toString());
         viewHolder.setText(R.id.total_price, mContext.getString(R.string.TotalPrice, itemData.getTotalPrice()));
 
-        storeControllerApi.getStoreAddressByAddressId(itemData.getPickupStoreAddressId()).subscribe(responseBean -> {
-            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                StoreAddress storeAddress = responseBean.getData();
-                viewHolder.setText(R.id.pickup_address, "取货地址:" + storeAddress.getDetail());
-                viewHolder.setText(R.id.store_contactNumber, "门店联系电话:" + storeAddress.getPhone());
-            } else {
-                Log.e(TAG, responseBean.getMsg());
-                ToastUtils.showSafeToast(mContext, mContext.getString(R.string.SERVER_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-            }
-        }, throwable -> {
-            Log.e(TAG, "get ShopOrder pickup address failed", throwable);
-            ToastUtils.showSafeToast(mContext, mContext.getString(R.string.CLIENT_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-        });
+        StoreAddress storeAddress = itemData.getStoreAddress();
+        viewHolder.setText(R.id.pickup_address, "取货地址:" + storeAddress.getDetail());
+        viewHolder.setText(R.id.store_contactNumber, "门店联系电话:" + storeAddress.getPhone());
 
 
         userControllerApi.getUserPhone(itemData.getUsername(), CommonApp.getApplication().getUserToken()).subscribe(responseBean -> {
             if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                viewHolder.setText(R.id.user_phoneNumber, "用户电话:" + responseBean.getData().getPhone());
+                viewHolder.setText(R.id.user_phoneNumber, "用户电话:" + responseBean.getData());
             } else {
                 Log.e(TAG, responseBean.getMsg());
                 ToastUtils.showSafeToast(mContext, mContext.getString(R.string.SERVER_USER_EXCEPTION_GET_PHONE_MSG));

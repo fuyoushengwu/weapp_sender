@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.List;
 
-import cn.aijiamuyingfang.client.domain.previeworder.PreOrderGood;
+import cn.aijiamuyingfang.vo.preorder.PreOrderGood;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.CommonAdapter;
 import cn.aijiamuyingfang.weapp.manager.widgets.recycleview.adapter.RecyclerViewHolder;
 import cn.aijiamuyingfang.weapp.sender.R;
@@ -22,7 +22,7 @@ public class PreOrderGoodAdapter extends CommonAdapter<PreOrderGood> {
 
     @Override
     protected void convert(RecyclerViewHolder viewHolder, PreOrderGood itemData, int position) {
-        viewHolder.setText(R.id.good_name, itemData.getGoodName());
+        viewHolder.setText(R.id.good_name, itemData.getGood().getName());
         viewHolder.setText(R.id.good_count, itemData.getCount() + "");
     }
 }

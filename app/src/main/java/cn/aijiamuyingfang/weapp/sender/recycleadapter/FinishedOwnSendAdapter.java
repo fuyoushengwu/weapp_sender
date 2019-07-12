@@ -6,15 +6,13 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-import cn.aijiamuyingfang.client.commons.domain.ResponseBean;
-import cn.aijiamuyingfang.client.commons.domain.ResponseCode;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrder;
-import cn.aijiamuyingfang.client.domain.shoporder.ShopOrderItem;
-import cn.aijiamuyingfang.client.domain.user.RecieveAddress;
 import cn.aijiamuyingfang.client.rest.api.ShopOrderControllerApi;
-import cn.aijiamuyingfang.client.rest.api.UserControllerApi;
+import cn.aijiamuyingfang.vo.response.ResponseBean;
+import cn.aijiamuyingfang.vo.response.ResponseCode;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrder;
+import cn.aijiamuyingfang.vo.shoporder.ShopOrderItem;
+import cn.aijiamuyingfang.vo.user.RecieveAddress;
 import cn.aijiamuyingfang.weapp.manager.access.server.impl.ShopOrderControllerClient;
-import cn.aijiamuyingfang.weapp.manager.access.server.impl.UserControllerClient;
 import cn.aijiamuyingfang.weapp.manager.commons.CommonApp;
 import cn.aijiamuyingfang.weapp.manager.commons.utils.DateUtils;
 import cn.aijiamuyingfang.weapp.manager.commons.utils.ToastUtils;
@@ -31,7 +29,6 @@ import io.reactivex.disposables.Disposable;
 public class FinishedOwnSendAdapter extends CommonAdapter<ShopOrder> {
     private static final String TAG = FinishedOwnSendAdapter.class.getName();
     private static final ShopOrderControllerApi shopOrderControllerApi = new ShopOrderControllerClient();
-    private static final UserControllerApi userControllerApi = new UserControllerClient();
 
     public FinishedOwnSendAdapter(Context context, List<ShopOrder> data) {
         super(context, data, R.layout.adapter_item_finished_ownsend);
@@ -41,25 +38,15 @@ public class FinishedOwnSendAdapter extends CommonAdapter<ShopOrder> {
     protected void convert(RecyclerViewHolder viewHolder, final ShopOrder itemData, final int position) {
         StringBuilder sb = new StringBuilder();
         for (ShopOrderItem orderGood : itemData.getOrderItemList()) {
-            sb.append(orderGood.getGoodName()).append("*").append(orderGood.getCount()).append("\n");
+            sb.append(orderGood.getGood().getName()).append("*").append(orderGood.getCount()).append("\n");
         }
         viewHolder.setText(R.id.goods, sb.toString());
         viewHolder.setText(R.id.total_price, "总价:" + itemData.getTotalPrice());
 
-        userControllerApi.getRecieveAddress(itemData.getUsername(), itemData.getRecieveAddressId(), CommonApp.getApplication().getUserToken()).subscribe(responseBean -> {
-            if (ResponseCode.OK.getCode().equals(responseBean.getCode())) {
-                RecieveAddress recieveAddress = responseBean.getData();
-                viewHolder.setText(R.id.address_recipient, "收件人:" + recieveAddress.getReciever());
-                viewHolder.setText(R.id.address_contactNumber, "联系电话:" + recieveAddress.getPhone());
-                viewHolder.setText(R.id.address_detailAddress, "收件地址:" + recieveAddress.getProvince().getName() + recieveAddress.getCity().getName() + recieveAddress.getCounty().getName() + recieveAddress.getDetail());
-            } else {
-                Log.e(TAG, responseBean.getMsg());
-                ToastUtils.showSafeToast(mContext, mContext.getString(R.string.SERVER_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-            }
-        }, throwable -> {
-            Log.e(TAG, "get ShopOrder recieve address failed", throwable);
-            ToastUtils.showSafeToast(mContext, mContext.getString(R.string.CLIENT_SHOPORDER_RECIEVE_ADDRESS_EXCEPTION_GET_FAILED_MSG));
-        });
+        RecieveAddress recieveAddress = itemData.getRecieveAddress();
+        viewHolder.setText(R.id.address_recipient, "收件人:" + recieveAddress.getReciever());
+        viewHolder.setText(R.id.address_contactNumber, "联系电话:" + recieveAddress.getPhone());
+        viewHolder.setText(R.id.address_detailAddress, "收件地址:" + recieveAddress.getProvince().getName() + recieveAddress.getCity().getName() + recieveAddress.getCounty().getName() + recieveAddress.getDetail());
 
         viewHolder.setText(R.id.third_send_no, "送货员:" + itemData.getThirdsendNo());
         viewHolder.setText(R.id.order_create_time, "订单创建时间:" + DateUtils.date2String(itemData.getCreateTime(), DateUtils.YMD_HMS_FORMAT));
