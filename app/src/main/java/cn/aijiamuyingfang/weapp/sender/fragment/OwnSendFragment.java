@@ -57,8 +57,8 @@ public final class OwnSendFragment extends RefreshableTabFragment<ShopOrder, Pag
             return false;
         }
     };
-    private final List<ShopOrderStatus> mCurShopOrderStatus = new ArrayList<>();
-    private final List<SendType> mCurShopOrderSendType = new ArrayList<>();
+    private final List<ShopOrderStatus> mStatusList = new ArrayList<>();
+    private final List<SendType> mSendTypeList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -78,16 +78,16 @@ public final class OwnSendFragment extends RefreshableTabFragment<ShopOrder, Pag
         mTabIndex = mTabTitleList.indexOf(tag);
         mAdapter = mAdapterList.get(mTabIndex);
         mRecyclerView.setAdapter(mAdapter);
-        mCurShopOrderSendType.clear();
-        mCurShopOrderStatus.clear();
+        mSendTypeList.clear();
+        mStatusList.clear();
         switch (tag) {
             case R.string.Tab_OwnSend_Layout_UNStart_Title:
-                mCurShopOrderSendType.add(SendType.OWNSEND);
-                mCurShopOrderStatus.add(ShopOrderStatus.UNSTART);
+                mSendTypeList.add(SendType.OWNSEND);
+                mStatusList.add(ShopOrderStatus.UNSTART);
                 break;
             case R.string.Tab_OwnSend_Layout_Doing_Title:
-                mCurShopOrderSendType.add(SendType.OWNSEND);
-                mCurShopOrderStatus.add(ShopOrderStatus.DOING);
+                mSendTypeList.add(SendType.OWNSEND);
+                mStatusList.add(ShopOrderStatus.DOING);
                 break;
             default:
                 break;
@@ -121,8 +121,8 @@ public final class OwnSendFragment extends RefreshableTabFragment<ShopOrder, Pag
         for (CommonAdapter<ShopOrder> adapter : mAdapterList) {
             adapter.setOnItemClickListener(mOnItemClickListener);
         }
-        mCurShopOrderSendType.add(SendType.OWNSEND);
-        mCurShopOrderStatus.add(ShopOrderStatus.UNSTART);
+        mSendTypeList.add(SendType.OWNSEND);
+        mStatusList.add(ShopOrderStatus.UNSTART);
         return mAdapterList.get(0);
     }
 
@@ -133,7 +133,7 @@ public final class OwnSendFragment extends RefreshableTabFragment<ShopOrder, Pag
 
     @Override
     protected Observable<ResponseBean<PagableShopOrderList>> customGetData(int mCurrPage, int mPageSize) {
-        return shopOrderControllerApi.getShopOrderList(mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
+        return shopOrderControllerApi.getShopOrderList(mStatusList, mSendTypeList, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
     }
 
     @Override

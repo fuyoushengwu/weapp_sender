@@ -53,8 +53,8 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Pa
             return false;
         }
     };
-    private final List<ShopOrderStatus> mCurShopOrderStatus = new ArrayList<>();
-    private final List<SendType> mCurShopOrderSendType = new ArrayList<>();
+    private final List<ShopOrderStatus> mStatusList = new ArrayList<>();
+    private final List<SendType> mSendTypeList = new ArrayList<>();
     private int mTabIndex = 0;
 
     @NonNull
@@ -75,20 +75,20 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Pa
         mTabIndex = mTabTitleList.indexOf(tag);
         mAdapter = mAdapterList.get(mTabIndex);
         mRecyclerView.setAdapter(mAdapter);
-        mCurShopOrderSendType.clear();
-        mCurShopOrderStatus.clear();
+        mSendTypeList.clear();
+        mStatusList.clear();
         switch (tag) {
             case R.string.Tab_Finished_Layout_ThirdSend_Title:
-                mCurShopOrderSendType.add(SendType.THIRDSEND);
-                mCurShopOrderStatus.add(ShopOrderStatus.FINISHED);
+                mSendTypeList.add(SendType.THIRDSEND);
+                mStatusList.add(ShopOrderStatus.FINISHED);
                 break;
             case R.string.Tab_Finished_Layout_OwnSend_Title:
-                mCurShopOrderSendType.add(SendType.OWNSEND);
-                mCurShopOrderStatus.add(ShopOrderStatus.FINISHED);
+                mSendTypeList.add(SendType.OWNSEND);
+                mStatusList.add(ShopOrderStatus.FINISHED);
                 break;
             case R.string.Tab_Finished_Layout_PickUP_Title:
-                mCurShopOrderSendType.add(SendType.PICKUP);
-                mCurShopOrderStatus.add(ShopOrderStatus.FINISHED);
+                mSendTypeList.add(SendType.PICKUP);
+                mStatusList.add(ShopOrderStatus.FINISHED);
                 break;
             default:
                 break;
@@ -122,8 +122,8 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Pa
         for (CommonAdapter<ShopOrder> adapter : mAdapterList) {
             adapter.setOnItemClickListener(mOnItemClickListener);
         }
-        mCurShopOrderSendType.add(SendType.THIRDSEND);
-        mCurShopOrderStatus.add(ShopOrderStatus.FINISHED);
+        mSendTypeList.add(SendType.THIRDSEND);
+        mStatusList.add(ShopOrderStatus.FINISHED);
         return mAdapterList.get(0);
     }
 
@@ -134,7 +134,7 @@ public final class FinishedFragment extends RefreshableTabFragment<ShopOrder, Pa
 
     @Override
     protected Observable<ResponseBean<PagableShopOrderList>> customGetData(int mCurrPage, int mPageSize) {
-        return shopOrderControllerApi.getShopOrderList(mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
+        return shopOrderControllerApi.getShopOrderList(mStatusList, mSendTypeList, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
     }
 
     @Override

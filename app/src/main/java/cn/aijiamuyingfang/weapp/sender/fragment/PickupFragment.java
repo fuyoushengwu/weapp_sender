@@ -56,8 +56,8 @@ public final class PickupFragment extends RefreshableTabFragment<ShopOrder, Paga
             return false;
         }
     };
-    private final List<ShopOrderStatus> mCurShopOrderStatus = new ArrayList<>();
-    private final List<SendType> mCurShopOrderSendType = new ArrayList<>();
+    private final List<ShopOrderStatus> mStatusList = new ArrayList<>();
+    private final List<SendType> mSendTypeList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -77,16 +77,16 @@ public final class PickupFragment extends RefreshableTabFragment<ShopOrder, Paga
         mTabIndex = mTabTitleList.indexOf(tag);
         mAdapter = mAdapterList.get(mTabIndex);
         mRecyclerView.setAdapter(mAdapter);
-        mCurShopOrderSendType.clear();
-        mCurShopOrderStatus.clear();
+        mSendTypeList.clear();
+        mStatusList.clear();
         switch (tag) {
             case R.string.Tab_PickUP_Layout_UNStart_Title:
-                mCurShopOrderSendType.add(SendType.PICKUP);
-                mCurShopOrderStatus.add(ShopOrderStatus.UNSTART);
+                mSendTypeList.add(SendType.PICKUP);
+                mStatusList.add(ShopOrderStatus.UNSTART);
                 break;
             case R.string.Tab_PickUP_Layout_Doing_Title:
-                mCurShopOrderSendType.add(SendType.PICKUP);
-                mCurShopOrderStatus.add(ShopOrderStatus.DOING);
+                mSendTypeList.add(SendType.PICKUP);
+                mStatusList.add(ShopOrderStatus.DOING);
                 break;
             default:
                 break;
@@ -120,8 +120,8 @@ public final class PickupFragment extends RefreshableTabFragment<ShopOrder, Paga
         for (CommonAdapter<ShopOrder> adapter : mAdapterList) {
             adapter.setOnItemClickListener(mOnItemClickListener);
         }
-        mCurShopOrderSendType.add(SendType.PICKUP);
-        mCurShopOrderStatus.add(ShopOrderStatus.UNSTART);
+        mSendTypeList.add(SendType.PICKUP);
+        mStatusList.add(ShopOrderStatus.UNSTART);
         return mAdapterList.get(0);
     }
 
@@ -132,7 +132,7 @@ public final class PickupFragment extends RefreshableTabFragment<ShopOrder, Paga
 
     @Override
     protected Observable<ResponseBean<PagableShopOrderList>> customGetData(int mCurrPage, int mPageSize) {
-        return shopOrderControllerApi.getShopOrderList(mCurShopOrderStatus, mCurShopOrderSendType, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
+        return shopOrderControllerApi.getShopOrderList(mStatusList, mSendTypeList, mCurrPage, mPageSize, CommonApp.getApplication().getUserToken());
     }
 
     @Override
