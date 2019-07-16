@@ -203,7 +203,7 @@ public class CommonAdapterUtils {
 
     private static void setOnClickListener(RecyclerViewHolder viewHolder, ShopOrder itemData, int position, Context context, CommonAdapter commonAdapter) {
         viewHolder.setOnClickListener(R.id.btn_delete, v -> {
-            int finishedDays = itemData.getLastModifyTime();
+            double finishedDays = itemData.getLastModifyTime();
             if (finishedDays <= 100) {
                 ToastUtils.showSafeToast(context, "只有订单已完成100天以上，才能删除");
                 return;
